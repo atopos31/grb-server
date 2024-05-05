@@ -8,7 +8,6 @@ import (
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
-	"go.uber.org/zap"
 )
 
 func InitConf(configPath string) (err error) {
@@ -28,10 +27,10 @@ func InitConf(configPath string) (err error) {
 	viper.OnConfigChange(func(in fsnotify.Event) {
 		fmt.Println("config has changed, time:" + time.Now().String())
 		if err := viper.Unmarshal(global.Conf); err != nil {
-			zap.L().Error("viper umarshal Conf falied,Error:", zap.Error(err))
+			global.Log.Error("viper.Unmarshal failed", err)
 			return
 		}
-		zap.L().Debug("config has changed", zap.Any("new config:", global.Conf))
+		global.Log.Debug("config has changed")
 	})
 
 	return nil

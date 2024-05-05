@@ -13,7 +13,10 @@ func main() {
 	// 初始化配置
 	core.InitConf(*configDir)
 	fmt.Println(global.Conf)
+	// 初始化日志
+	global.Log = core.InitLogger()
 	// 初始化数据库
 	global.DB = core.InitGorm()
 	fmt.Println(global.DB)
+	global.Log.Info("初始化完成")
 }
