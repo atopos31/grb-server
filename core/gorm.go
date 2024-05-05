@@ -12,6 +12,7 @@ import (
 // 初始化数据库
 func InitGorm() *gorm.DB {
 	if global.Conf.Mysql.Host == "" {
+		global.Log.Error("mysql配置错误")
 		return nil
 	}
 

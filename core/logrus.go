@@ -1,9 +1,9 @@
 package core
 
 import (
+	"github.com/sirupsen/logrus"
 	"gvb/global"
 	"os"
-	"github.com/sirupsen/logrus"
 )
 
 // 初始化日志

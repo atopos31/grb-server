@@ -9,3 +9,6 @@ pro:
 	@go fmt ./...
 	@swag init
 	@go run ./main.go -config ./config/pro.yaml
+
+fmt:
+	@go fmt ./...
