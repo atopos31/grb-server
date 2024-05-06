@@ -2,19 +2,17 @@ package routers
 
 import (
 	"gvb/api/user"
-	"gvb/global"
+	"gvb/config"
+	"gvb/middleware"
 
 	"github.com/gin-gonic/gin"
 )
 
-func InitRouter() *gin.Engine {
-	gin.SetMode(global.Conf.Sys.Env)
+func InitRouter(config config.System) *gin.Engine {
+	gin.SetMode(config.Env)
 	router := gin.Default()
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	// 中间件
+	router.Use(middleware.Cors(config.Origin))
 	// 注册用户相关路由
 	user.RegisRouter(router)
 

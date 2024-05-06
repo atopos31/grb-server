@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"gvb/config"
 	"gvb/global"
 	"time"
@@ -10,9 +9,10 @@ import (
 	"github.com/spf13/viper"
 )
 
-func InitConf(configPath string) (err error) {
+func InitConf(configPath string) *config.Config {
 	viper.SetConfigFile(configPath)
 	var c = new(config.Config)
+	var err error
 	if err = viper.ReadInConfig(); err != nil {
 		panic(err)
 	}
@@ -20,18 +20,15 @@ func InitConf(configPath string) (err error) {
 	if err = viper.Unmarshal(c); err != nil {
 		panic(err)
 	}
-	global.Conf = c
 
 	viper.WatchConfig()
-
 	viper.OnConfigChange(func(in fsnotify.Event) {
-		fmt.Println("config has changed, time:" + time.Now().String())
-		if err := viper.Unmarshal(global.Conf); err != nil {
+		if err := viper.Unmarshal(c); err != nil {
 			global.Log.Error("viper.Unmarshal failed", err)
 			return
 		}
-		global.Log.Debug("config has changed")
+		global.Log.Debug("config has changed", time.Now().String())
 	})
 
-	return nil
+	return c
 }

@@ -28,7 +28,7 @@ func (r *Response) Success(c *gin.Context, data any) {
 	})
 }
 
-func (r *Response) Error(c *gin.Context, err errcode.Error) {
+func (r *Response) Error(c *gin.Context, err *errcode.Error) {
 	c.JSON(http.StatusOK, Response{
 		Code:    err.Code(),
 		Message: err.Msg(),

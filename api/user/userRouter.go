@@ -2,7 +2,9 @@ package user
 
 import "github.com/gin-gonic/gin"
 
-func RegisRouter(c *gin.Engine) {
-	userApi := c.Group("/user")
-	userApi.GET("/login", Login)
+func RegisRouter(r *gin.Engine) {
+	userApi := r.Group("/user")
+	{
+		userApi.GET("/login", Login)
+	}
 }

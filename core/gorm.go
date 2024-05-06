@@ -1,32 +1,23 @@
 package core
 
 import (
-	"gvb/global"
+	"errors"
+	"gvb/config"
+	"gvb/models/entity"
 	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 // 初始化数据库
-func InitGorm() *gorm.DB {
-	if global.Conf.Mysql.Host == "" {
-		global.Log.Error("mysql配置错误")
-		return nil
+func InitGorm(config config.Mysql) *gorm.DB {
+	if config.Host == "" || config.Port == "" {
+		panic(errors.New("mysql配置错误"))
 	}
 
-	dsn := global.Conf.Mysql.Dsn()
-
-	// 配置日志
-	var mysqllogger logger.Interface
-	if global.Conf.Mysql.LogLevel == "info" {
-		mysqllogger = logger.Default.LogMode(logger.Info)
-	} else if global.Conf.Mysql.LogLevel == "error" {
-		mysqllogger = logger.Default.LogMode(logger.Error)
-	} else if global.Conf.Mysql.LogLevel == "warn" {
-		mysqllogger = logger.Default.LogMode(logger.Warn)
-	}
+	dsn := config.Dsn()
+	mysqllogger := config.Logger()
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: mysqllogger,
@@ -34,10 +25,14 @@ func InitGorm() *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
+
 	sqlDB, _ := db.DB()
 	sqlDB.SetMaxIdleConns(10)               // 设置空闲连接池中连接的最大数量
 	sqlDB.SetMaxOpenConns(100)              // 	设置连接池
 	sqlDB.SetConnMaxLifetime(time.Hour * 4) // 设置连接超时时间
+
+	// 初始化实体
+	entity.InitEntity(db)
 
 	return db
 }

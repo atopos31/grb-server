@@ -1,13 +1,15 @@
 package core
 
 import (
-	"github.com/sirupsen/logrus"
+	"gvb/config"
 	"gvb/global"
 	"os"
+
+	"github.com/sirupsen/logrus"
 )
 
 // 初始化日志
-func InitLogger() *logrus.Logger {
+func InitLogger(config config.Logger) *logrus.Logger {
 	mLog := logrus.New()
 	mLog.SetOutput(os.Stdout)
 	mLog.SetReportCaller(global.Conf.Logger.ShowLine) // 打印调用信息
@@ -17,7 +19,8 @@ func InitLogger() *logrus.Logger {
 	})
 	level, err := logrus.ParseLevel(global.Conf.Logger.LogLevel)
 	if err != nil {
-		mLog.SetLevel(level)
+		mLog.Error("日志级别设置错误")
 	}
+	mLog.SetLevel(level)
 	return mLog
 }
