@@ -2,17 +2,15 @@ package service
 
 import (
 	"gvb/dao"
-
-	"gorm.io/gorm"
 )
 
 type UserService struct {
-	repo *dao.UserRepo
+	userrepo *dao.UserRepo
 }
 
-func NewUserService(db *gorm.DB) *UserService {
+func NewUserService(repo *dao.UserRepo) *UserService {
 	return &UserService{
-		repo: dao.NewUserRepo(db),
+		userrepo: repo,
 	}
 }
 
