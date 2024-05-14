@@ -7,9 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var (
-	maxAge = 12
-)
+var maxAge = 12
 
 // Cors add cors headers.
 func Cors(origin_c string) gin.HandlerFunc {

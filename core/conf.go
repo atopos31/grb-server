@@ -1,9 +1,10 @@
 package core
 
 import (
+	"time"
+
 	"gvb/config"
 	"gvb/global"
-	"time"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
@@ -11,7 +12,7 @@ import (
 
 func InitConf(configPath string) *config.Config {
 	viper.SetConfigFile(configPath)
-	var c = new(config.Config)
+	c := new(config.Config)
 	var err error
 	if err = viper.ReadInConfig(); err != nil {
 		panic(err)

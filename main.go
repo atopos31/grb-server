@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+
 	"gvb/core"
 	"gvb/global"
 	"gvb/routers"
@@ -20,13 +21,13 @@ func main() {
 	db := core.InitGorm(global.Conf.Mysql)
 	// 初始化redis
 	cache := core.InitRedis(global.Conf.Redis)
-	//service注入
+	// service注入
 	service.Svc = service.New(db, cache)
 	// 初始化路由
 	router := routers.InitRouter(global.Conf.Sys)
 
 	if global.Conf.Sys.Env == "debug" {
-		global.Log.Debug(global.Conf)
+		global.Log.Info(global.Conf)
 	}
 
 	router.Run(global.Conf.Sys.Addr())

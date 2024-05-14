@@ -2,9 +2,10 @@ package core
 
 import (
 	"errors"
+	"time"
+
 	"gvb/config"
 	"gvb/models/entity"
-	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -31,7 +32,7 @@ func InitGorm(config config.Mysql) *gorm.DB {
 	sqlDB.SetMaxOpenConns(100)              // 	设置连接池
 	sqlDB.SetConnMaxLifetime(time.Hour * 4) // 设置连接超时时间
 
-	// 初始化实体
+	// 初始化表
 	entity.InitEntity(db)
 
 	return db

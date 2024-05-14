@@ -10,11 +10,13 @@ import (
 var Svc *Service
 
 type Service struct {
-	UserService *UserService
+	UserService    *UserService
+	ArticleService *ArticleService
 }
 
 func New(db *gorm.DB, cache *redis.Client) *Service {
 	return &Service{
-		UserService: NewUserService(dao.NewUserRepo(db)),
+		UserService:    NewUserService(dao.NewUserRepo(db)),
+		ArticleService: NewArticleService(dao.NewArticleRepo(db, cache), dao.NewTagRepo(db)),
 	}
 }

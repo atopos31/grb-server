@@ -1,8 +1,9 @@
 package res
 
 import (
-	"gvb/models/errcode"
 	"net/http"
+
+	"gvb/models/errcode"
 
 	"github.com/gin-gonic/gin"
 )
@@ -32,6 +33,14 @@ func (r *Response) Error(c *gin.Context, err *errcode.Error) {
 	c.JSON(http.StatusOK, Response{
 		Code:    err.Code(),
 		Message: err.Msg(),
+		Data:    gin.H{},
+	})
+}
+
+func (r *Response) ErrorRaw(c *gin.Context, err error) {
+	c.JSON(http.StatusOK, Response{
+		Code:    9999,
+		Message: err.Error(),
 		Data:    gin.H{},
 	})
 }
