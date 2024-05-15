@@ -6,7 +6,7 @@ import (
 	"gvb/config"
 	"gvb/middleware"
 
-	_ "gvb/docs"
+	docs "gvb/docs"
 
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
@@ -16,9 +16,12 @@ import (
 func InitRouter(config config.System) *gin.Engine {
 	gin.SetMode(config.Env)
 	router := gin.Default()
+	// swagger文档
+	docs.SwaggerInfo.BasePath = "/api"
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	// 中间件
 	router.Use(middleware.Cors(config.Origin))
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
 	routerGroup := router.Group("/api")
 	// 注册用户相关路由
 	user.RegisRouter(routerGroup)

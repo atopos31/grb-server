@@ -15,8 +15,12 @@ type Service struct {
 }
 
 func New(db *gorm.DB, cache *redis.Client) *Service {
+	userRepo := dao.NewUserRepo(db)
+	articleRepo := dao.NewArticleRepo(db, cache)
+	tagRepo := dao.NewTagRepo(db)
+
 	return &Service{
-		UserService:    NewUserService(dao.NewUserRepo(db)),
-		ArticleService: NewArticleService(dao.NewArticleRepo(db, cache), dao.NewTagRepo(db)),
+		UserService:    NewUserService(userRepo),
+		ArticleService: NewArticleService(articleRepo, tagRepo),
 	}
 }

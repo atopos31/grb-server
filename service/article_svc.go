@@ -4,6 +4,8 @@ import (
 	"gvb/dao"
 	"gvb/models/entity"
 	"gvb/models/req"
+
+	"github.com/google/uuid"
 )
 
 type ArticleService struct {
@@ -22,6 +24,7 @@ func (a *ArticleService) Create(reqArticle *req.Article) error {
 	}
 	article := entity.Article{
 		Title:      reqArticle.Title,
+		Uuid:       uuid.NewString(),
 		Content:    reqArticle.Content,
 		Summary:    reqArticle.Summary,
 		CoverImage: reqArticle.CoverImage,
@@ -36,4 +39,12 @@ func (a *ArticleService) Create(reqArticle *req.Article) error {
 	}
 
 	return nil
+}
+
+func (a *ArticleService) GetList(reqPage *req.ArticleList) ([]entity.Article, error) {
+	return a.articleRepo.GetList(reqPage.PageSize, reqPage.PageNum)
+}
+
+func (a *ArticleService) GetByUuid(uuid string) (entity.Article, error) {
+	return a.articleRepo.GetByUuid(uuid)
 }

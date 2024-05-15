@@ -34,6 +34,7 @@ func InitGorm(config config.Mysql) *gorm.DB {
 
 	// 初始化表
 	entity.InitEntity(db)
+	// db.Create(&entity.Category{Name: "默认分类"})
 
 	return db
 }
