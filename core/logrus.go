@@ -12,6 +12,7 @@ import (
 // 初始化日志
 func InitLogger(config config.Logger) *logrus.Logger {
 	mLog := logrus.New()
+	//日志输出位置
 	mLog.SetOutput(os.Stdout)
 	mLog.SetReportCaller(global.Conf.Logger.ShowLine) // 打印调用信息
 	mLog.SetFormatter(&logrus.TextFormatter{
@@ -20,7 +21,7 @@ func InitLogger(config config.Logger) *logrus.Logger {
 	})
 	level, err := logrus.ParseLevel(global.Conf.Logger.LogLevel)
 	if err != nil {
-		mLog.Error("日志级别设置错误")
+		panic(err)
 	}
 	mLog.SetLevel(level)
 	return mLog
