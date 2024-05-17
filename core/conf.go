@@ -15,6 +15,7 @@ func InitConf(configPath string) *config.Config {
 	c := new(config.Config)
 	var err error
 	if err = viper.ReadInConfig(); err != nil {
+		println("viper.ReadInConfig failed,please enter " + configPath + "exit!")
 		panic(err)
 	}
 
