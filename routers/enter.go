@@ -21,9 +21,9 @@ func InitRouter(config config.System) *gin.Engine {
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	// 中间件
 	router.Use(middleware.Cors(config.Origin))
-
+	// base URL
 	routerGroup := router.Group("/api")
-	// 注册用户相关路由
+
 	user.RegisRouter(routerGroup)
 	article.RegisRouter(routerGroup)
 

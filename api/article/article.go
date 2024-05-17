@@ -9,8 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var response = res.NewResponse()
-
 // @Summary 创建文章
 // @Description 创建文章
 // @Tags 文章
@@ -23,15 +21,15 @@ func create(c *gin.Context) {
 	articleReq := new(req.Article)
 
 	if err := c.ShouldBindJSON(articleReq); err != nil {
-		response.ErrorRaw(c, err)
+		res.ErrorRaw(c, err)
 		return
 	}
 
 	if err := service.Svc.ArticleService.Create(articleReq); err != nil {
-		response.Error(c, errcode.ErrInternalServer)
+		res.Error(c, errcode.ErrInternalServer)
 		return
 	}
-	response.Success(c, nil)
+	res.Success(c, nil)
 }
 
 // @Summary 获取文章列表
@@ -45,15 +43,15 @@ func create(c *gin.Context) {
 func getList(c *gin.Context) {
 	articleList := new(req.ArticleList)
 	if err := c.ShouldBindQuery(articleList); err != nil {
-		response.ErrorRaw(c, err)
+		res.ErrorRaw(c, err)
 		return
 	}
 	list, err := service.Svc.ArticleService.GetList(articleList)
 	if err != nil {
-		response.Error(c, errcode.ErrInternalServer)
+		res.Error(c, errcode.ErrInternalServer)
 		return
 	}
-	response.Success(c, list)
+	res.Success(c, list)
 }
 
 // @Summary 获取文章详情
@@ -67,13 +65,13 @@ func getList(c *gin.Context) {
 func getByUuid(c *gin.Context) {
 	uuid := c.Query("uuid")
 	if uuid == "" {
-		response.Error(c, errcode.ErrInvalidParam)
+		res.Error(c, errcode.ErrInvalidParam)
 		return
 	}
 	article, err := service.Svc.ArticleService.GetByUuid(uuid)
 	if err != nil {
-		response.Error(c, errcode.ErrInternalServer)
+		res.Error(c, errcode.ErrInternalServer)
 		return
 	}
-	response.Success(c, article)
+	res.Success(c, article)
 }

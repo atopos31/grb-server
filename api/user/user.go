@@ -8,13 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var response = res.NewResponse()
-
 // 登录 handler
 func login(c *gin.Context) {
 	if err := service.Svc.UserService.Login(); err == nil {
-		response.Success(c, nil)
+		res.Success(c, nil)
 		return
 	}
-	response.Error(c, errcode.ErrInternalServer)
+	res.Error(c, errcode.ErrInternalServer)
 }
