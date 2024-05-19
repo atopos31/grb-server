@@ -22,7 +22,7 @@ func main() {
 	// 初始化redis
 	cache := core.InitRedis(global.Conf.Redis)
 	// service注入
-	service.Svc = service.New(db, cache)
+	service.Svc = service.New(db, cache, global.Conf.Oss)
 	// 初始化路由
 	router := routers.InitRouter(global.Conf.Sys)
 
