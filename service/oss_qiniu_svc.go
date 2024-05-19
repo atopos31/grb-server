@@ -25,7 +25,7 @@ func (o *OssQinui) GetUploadToken() (string, error) {
 	putPolicy := storage.PutPolicy{
 		Scope: o.bucket,
 	}
-	mac := auth.New(o.accessKey,o.secretKey)
+	mac := auth.New(o.accessKey, o.secretKey)
 	uptoken := putPolicy.UploadToken(mac)
 	return uptoken, nil
 }

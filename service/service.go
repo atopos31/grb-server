@@ -17,7 +17,7 @@ type Service struct {
 	OssService     inter.OssService
 }
 
-func New(db *gorm.DB, cache *redis.Client,ossConfig config.Oss) *Service {
+func New(db *gorm.DB, cache *redis.Client, ossConfig config.Oss) *Service {
 	userRepo := dao.NewUserRepo(db)
 	articleRepo := dao.NewArticleRepo(db, cache)
 	tagRepo := dao.NewTagRepo(db)
