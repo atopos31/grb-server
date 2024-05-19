@@ -6,4 +6,5 @@ type Config struct {
 	Logger Logger `mapstructure:"logger"`
 	Mysql  Mysql  `mapstructure:"mysql"`
 	Redis  Redis  `mapstructure:"redis"`
+	Oss    Oss    `mapstructure:"oss"`
 }

@@ -26,7 +26,6 @@ func (a *ArticleService) Create(reqArticle *req.Article) error {
 		Title:      reqArticle.Title,
 		Uuid:       uuid.NewString(),
 		Content:    reqArticle.Content,
-		Summary:    reqArticle.Summary,
 		CoverImage: reqArticle.CoverImage,
 		CategoryID: reqArticle.CategoryID,
 		Top:        reqArticle.Top,

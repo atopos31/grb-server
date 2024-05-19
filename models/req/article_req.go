@@ -3,12 +3,11 @@ package req
 type Article struct {
 	Title      string   `json:"title" binding:"required"`
 	Content    string   `json:"content" binding:"required"`
-	Summary    string   `json:"summary"`
-	CoverImage string   `json:"cover_image"`
-	CategoryID uint     `json:"category_id"`
-	Tags       []string `json:"tags"`
-	Top        uint8    `json:"top" binding:"oneof=0 1"`
-	Status     uint8    `json:"status" binding:"oneof=0 1"`
+	CoverImage string   `json:"cover_image"`                // 文章封面
+	CategoryID uint     `json:"category_id"`                // 分类ID
+	Tags       []string `json:"tags"`                       // 标签
+	Top        uint8    `json:"top" binding:"oneof=0 1"`    // 是否置顶
+	Status     uint8    `json:"status" binding:"oneof=0 1"` // 文章状态
 }
 
 type ArticleList struct {
