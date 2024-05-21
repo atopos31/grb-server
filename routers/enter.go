@@ -2,6 +2,7 @@ package routers
 
 import (
 	"gvb/api/article"
+	"gvb/api/oss"
 	"gvb/api/user"
 	"gvb/config"
 	"gvb/middleware"
@@ -26,6 +27,7 @@ func InitRouter(config config.System) *gin.Engine {
 
 	user.RegisRouter(routerGroup)
 	article.RegisRouter(routerGroup)
+	oss.RegisRouter(routerGroup)
 
 	return router
 }

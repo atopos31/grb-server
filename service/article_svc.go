@@ -24,7 +24,7 @@ func (a *ArticleService) Create(reqArticle *req.Article) error {
 	}
 	article := entity.Article{
 		Title:      reqArticle.Title,
-		Uuid:       uuid.NewString(),
+		Uuid:       uuid.New().ID(),
 		Content:    reqArticle.Content,
 		CoverImage: reqArticle.CoverImage,
 		CategoryID: reqArticle.CategoryID,

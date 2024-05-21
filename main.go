@@ -25,7 +25,7 @@ func main() {
 	service.Svc = service.New(db, cache, global.Conf.Oss)
 	// 初始化路由
 	router := routers.InitRouter(global.Conf.Sys)
-
+	// 输出配置
 	if global.Conf.Sys.Env == "debug" {
 		global.Log.Info(global.Conf)
 	}

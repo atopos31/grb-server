@@ -2,11 +2,9 @@ package jwt
 
 import (
 	"errors"
-	"fmt"
 	"gvb/global"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -49,27 +47,6 @@ func Parse(tokenString string, secret string) (*Payload, error) {
 
 	// Other errors.
 	return nil, err
-}
-
-// ParseRequest gets the token from the header and
-// pass it to the Parse function to parses the token.
-func ParseRequest(c *gin.Context) (*Payload, error) {
-	header := c.Request.Header.Get("Authorization")
-
-	// Load the jwt secret from config
-	secret := global.Conf.Jwt.Secret
-
-	if len(header) == 0 {
-		return &Payload{}, ErrMissingHeader
-	}
-
-	var t string
-	// Parse the header to get the token part.
-	_, err := fmt.Sscanf(header, "Bearer %s", &t)
-	if err != nil {
-		global.Log.Info("parse jwt error: %v", err)
-	}
-	return Parse(t, secret)
 }
 
 // Sign signs the payload with the specified secret.
