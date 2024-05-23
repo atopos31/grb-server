@@ -4,6 +4,7 @@ go 1.22.2
 
 require (
 	github.com/fsnotify/fsnotify v1.7.0
+	github.com/go-sql-driver/mysql v1.7.0
 	github.com/google/uuid v1.6.0
 	github.com/spf13/viper v1.18.2
 	github.com/swaggo/swag v1.16.3
@@ -21,7 +22,6 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.20.0 // indirect
-	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/gofrs/flock v0.8.1 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect

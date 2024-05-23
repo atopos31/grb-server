@@ -14,6 +14,7 @@ var Svc *Service
 type Service struct {
 	UserService    *UserService
 	ArticleService *ArticleService
+	CateService    *CateService
 	OssService     inter.OssService
 }
 
@@ -21,6 +22,7 @@ func New(db *gorm.DB, cache *redis.Client, ossConfig config.Oss) *Service {
 	userRepo := dao.NewUserRepo(db)
 	articleRepo := dao.NewArticleRepo(db, cache)
 	tagRepo := dao.NewTagRepo(db)
+	cateRepo := dao.NewCateRepo(db)
 
 	//预留接口 实现可拓展 可选择不同Oss服务注入
 	ossSvc := NewOssQinui(ossConfig.OssQiniu)
@@ -28,6 +30,7 @@ func New(db *gorm.DB, cache *redis.Client, ossConfig config.Oss) *Service {
 	return &Service{
 		UserService:    NewUserService(userRepo),
 		ArticleService: NewArticleService(articleRepo, tagRepo),
+		CateService:    NewCateService(cateRepo),
 		OssService:     ossSvc,
 	}
 }

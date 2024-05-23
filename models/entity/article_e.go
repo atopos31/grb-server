@@ -7,7 +7,7 @@ import (
 // 文章表
 type Article struct {
 	gorm.Model
-	Uuid       uint32 `gorm:"not null;index;comment:文章uuid"`
+	Uuid       uint32 `gorm:"not null;index;comment:文章uuid;unique"`
 	Title      string `gorm:"type:varchar(255);not null;comment:文章标题"`
 	Summary    string `gorm:"type:varchar(255);comment:文章摘要"`
 	Content    string `gorm:"type:longtext;not null;comment:文章内容"`

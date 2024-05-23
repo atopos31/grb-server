@@ -18,7 +18,7 @@ func NewArticleService(repo *dao.ArticleRepo, tagRepo *dao.TagRepo) *ArticleServ
 }
 
 func (a *ArticleService) Create(reqArticle *req.Article) error {
-	tags, err := a.tagRepo.FirstOrCreateTags(reqArticle.Tags)
+	tags, err := a.tagRepo.FirstOrCreateTags(reqArticle.TagNames)
 	if err != nil {
 		return err
 	}
@@ -46,4 +46,22 @@ func (a *ArticleService) GetList(reqPage *req.ArticleList) ([]entity.Article, er
 
 func (a *ArticleService) GetByUuid(uuid string) (entity.Article, error) {
 	return a.articleRepo.GetByUuid(uuid)
+}
+
+func (a *ArticleService) DeleteByUuid(uuid string) error {
+	return a.articleRepo.DeleteByUuid(uuid)
+}
+
+func (a *ArticleService) Update(newArticle *req.Article) error {
+	article, err := a.articleRepo.UpdateByUuid(newArticle)
+	if err != nil {
+		return err
+	}
+
+	tags, err := a.tagRepo.FirstOrCreateTags(newArticle.TagNames)
+	if err != nil {
+		return err
+	}
+
+	return a.articleRepo.UpdateTags(article, tags)
 }

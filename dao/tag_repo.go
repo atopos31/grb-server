@@ -1,7 +1,6 @@
 package dao
 
 import (
-	"gvb/global"
 	"gvb/models/entity"
 
 	"gorm.io/gorm"
@@ -22,17 +21,18 @@ func NewTagRepo(db *gorm.DB) *TagRepo {
 如果没有就创建这个标签
 并返回完整可关联的数据
 */
-func (t *TagRepo) FirstOrCreateTags(tags []string) ([]entity.Tag, error) {
+func (t *TagRepo) FirstOrCreateTags(tagnames []string) ([]entity.Tag, error) {
 	var realTags []entity.Tag
-	for _, v := range tags {
-		//go 1.22新增特性
-		global.Log.Info(v)
-		tag := entity.Tag{Name: v}
-		if err := t.db.FirstOrCreate(&tag, tag).Error; err != nil {
+
+	tx := t.db.Begin()
+	for _, tagname := range tagnames {
+		tag := entity.Tag{Name: tagname}
+		if err := tx.FirstOrCreate(&tag, tag).Error; err != nil {
+			tx.Rollback()
 			return nil, err
 		}
 		realTags = append(realTags, tag)
 	}
 
-	return realTags, nil
+	return realTags, tx.Commit().Error
 }

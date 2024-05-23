@@ -11,5 +11,9 @@ func RegisRouter(r *gin.RouterGroup) {
 		articleApi.POST("/create", create)
 		// 获取文章详情
 		articleApi.GET("/get", getByUuid)
+		// 删除文章
+		articleApi.POST("/delete", delete)
+		// 更新文章
+		articleApi.POST("/update", update)
 	}
 }

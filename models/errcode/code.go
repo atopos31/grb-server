@@ -22,3 +22,7 @@ var (
 	ErrEncrypt            = NewError(10019, "Encrypting the user password error")
 	ErrServiceUnavailable = NewError(10020, "Service Unavailable")
 )
+
+var (
+	ErrDataIsExits = NewError(20000, "Data is exists")
+)
