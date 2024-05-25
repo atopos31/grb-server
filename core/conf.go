@@ -12,25 +12,25 @@ import (
 
 func InitConf(configPath string) *config.Config {
 	viper.SetConfigFile(configPath)
-	c := new(config.Config)
+	config := new(config.Config)
 	var err error
 	if err = viper.ReadInConfig(); err != nil {
 		println("viper.ReadInConfig failed,please enter " + configPath + "exit!")
 		panic(err)
 	}
 
-	if err = viper.Unmarshal(c); err != nil {
+	if err = viper.Unmarshal(config); err != nil {
 		panic(err)
 	}
 
 	viper.WatchConfig()
 	viper.OnConfigChange(func(in fsnotify.Event) {
-		if err := viper.Unmarshal(c); err != nil {
+		if err := viper.Unmarshal(config); err != nil {
 			global.Log.Error("viper.Unmarshal failed", err)
 			return
 		}
 		global.Log.Debug("config has changed", time.Now().String())
 	})
 
-	return c
+	return config
 }

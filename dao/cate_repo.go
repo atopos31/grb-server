@@ -18,8 +18,7 @@ func NewCateRepo(db *gorm.DB) *CateRepo {
 }
 
 func (c *CateRepo) Create(cate entity.Category) error {
-	err := c.db.Create(&cate).Error
-	if err != nil {
+	if err := c.db.Create(&cate).Error; err != nil {
 		var mysqlErr *mysql.MySQLError
 		if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
 			// 1062 unique数据重复冲突
@@ -49,8 +48,18 @@ func (c *CateRepo) GetByID(id uint) (entity.Category, error) {
 	return cate, err
 }
 
-func (c *CateRepo) Update(cate entity.Category) error {
-	return c.db.Save(&cate).Error
+func (c *CateRepo) Update(name string, id uint) error {
+	if err := c.db.Model(&entity.Category{}).Where("id = ?", id).Update("name", name).Error; err != nil {
+		var mysqlErr *mysql.MySQLError
+		if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
+			// 1062 unique数据重复冲突
+			return errcode.ErrDataIsExits
+		} else {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (c *CateRepo) Delete(id uint) error {

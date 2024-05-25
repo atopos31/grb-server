@@ -7,7 +7,7 @@ type System struct {
 	Origin string `mapstructure:"origin"`
 }
 
-// addr
+// 获取监听地址
 func (s *System) Addr() string {
 	return s.Host + ":" + s.Port
 }

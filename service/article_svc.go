@@ -52,8 +52,8 @@ func (a *ArticleService) DeleteByUuid(uuid string) error {
 	return a.articleRepo.DeleteByUuid(uuid)
 }
 
-func (a *ArticleService) Update(newArticle *req.Article) error {
-	article, err := a.articleRepo.UpdateByUuid(newArticle)
+func (a *ArticleService) Update(newArticle *req.Article, uuid string) error {
+	article, err := a.articleRepo.UpdateByUuid(newArticle, uuid)
 	if err != nil {
 		return err
 	}

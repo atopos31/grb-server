@@ -7,7 +7,7 @@ func RegisRouter(r *gin.RouterGroup) {
 	{
 		cateApi.POST("/create", create)
 		cateApi.GET("/list", getList)
-		cateApi.POST("/update", update)
-		cateApi.POST("/delete", delete)
+		cateApi.PUT("/update", update)
+		cateApi.DELETE("/delete/:id", delete)
 	}
 }

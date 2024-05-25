@@ -1,8 +1,11 @@
 package dao
 
 import (
+	"errors"
 	"gvb/models/entity"
+	"gvb/models/errcode"
 
+	"github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -35,4 +38,45 @@ func (t *TagRepo) FirstOrCreateTags(tagnames []string) ([]entity.Tag, error) {
 	}
 
 	return realTags, tx.Commit().Error
+}
+
+func (t *TagRepo) Create(tag entity.Tag) error {
+	if err := t.db.Create(&tag).Error; err != nil {
+		var mysqlErr *mysql.MySQLError
+		if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
+			// 1062 unique数据重复冲突
+			return errcode.ErrDataIsExits
+		} else {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (t *TagRepo) GetList() ([]entity.Tag, error) {
+	var tags []entity.Tag
+	if err := t.db.Find(&tags).Error; err != nil {
+		return nil, err
+	}
+
+	return tags, nil
+}
+
+func (t *TagRepo) Update(name string, id uint) error {
+	if err := t.db.Model(&entity.Tag{}).Where("id = ?", id).Update("name", name).Error; err != nil {
+		var mysqlErr *mysql.MySQLError
+		if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
+			// 1062 unique数据重复冲突
+			return errcode.ErrDataIsExits
+		} else {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (t *TagRepo) Delete(id uint) error {
+	return t.db.Delete(&entity.Tag{}, id).Error
 }

@@ -57,10 +57,10 @@ func (a *ArticleRepo) DeleteByUuid(uuid string) error {
 }
 
 // 根据uuid更新文章
-func (a *ArticleRepo) UpdateByUuid(newArticle *req.Article) (*entity.Article, error) {
+func (a *ArticleRepo) UpdateByUuid(newArticle *req.Article, uuid string) (*entity.Article, error) {
 	tx := a.db.Begin()
 	article := new(entity.Article)
-	if err := tx.Where("uuid = ?", newArticle.Uuid).First(&article).Error; err != nil {
+	if err := tx.Where("uuid = ?", uuid).First(&article).Error; err != nil {
 		tx.Rollback()
 		return nil, err
 	}

@@ -21,7 +21,7 @@ func create(c *gin.Context) {
 	articleReq := new(req.Article)
 
 	if err := c.ShouldBindJSON(articleReq); err != nil {
-		res.ErrorRaw(c, err)
+		res.Error(c, err)
 		return
 	}
 
@@ -43,7 +43,7 @@ func create(c *gin.Context) {
 func getList(c *gin.Context) {
 	articleList := new(req.ArticleList)
 	if err := c.ShouldBindQuery(articleList); err != nil {
-		res.ErrorRaw(c, err)
+		res.Error(c, err)
 		return
 	}
 	list, err := service.Svc.ArticleService.GetList(articleList)
@@ -81,11 +81,11 @@ func getByUuid(c *gin.Context) {
 // @Tags 文章
 // @Accept multipart/form-data
 // @Produce json
-// @Param uuid formData string true "文章uuid"
+// @Param uuid path string true "文章uuid"
 // @Success 200 {object} res.Response
-// @Router /article/delete [post]
+// @Router /article/delete/:uuid [delete]
 func delete(c *gin.Context) {
-	uuid := c.PostForm("uuid")
+	uuid := c.Param("uuid")
 	if uuid == "" {
 		res.Error(c, errcode.ErrInvalidParam)
 		return
@@ -101,21 +101,24 @@ func delete(c *gin.Context) {
 // @Tags 文章
 // @Accept json
 // @Produce json
+// @Param uuid path string true "文章uuid"
 // @Param article body req.Article true "文章信息"
 // @Success 200 {object} res.Response
-// @Router /article/update [post]
+// @Router /article/update/:uuid [put]
 func update(c *gin.Context) {
-	articleReq := new(req.Article)
-
-	if err := c.ShouldBindJSON(articleReq); err != nil {
-		res.ErrorRaw(c, err)
-		return
-	}
-	if articleReq.Uuid == 0 {
+	uuid := c.Param("uuid")
+	if uuid == "" {
 		res.Error(c, errcode.ErrInvalidParam)
 		return
 	}
-	if err := service.Svc.ArticleService.Update(articleReq); err != nil {
+
+	articleReq := new(req.Article)
+	if err := c.ShouldBindJSON(articleReq); err != nil {
+		res.Error(c, errcode.ErrInvalidParam)
+		return
+	}
+
+	if err := service.Svc.ArticleService.Update(articleReq, uuid); err != nil {
 		res.Error(c, errcode.ErrInternalServer)
 		return
 	}

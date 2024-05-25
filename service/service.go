@@ -15,6 +15,7 @@ type Service struct {
 	UserService    *UserService
 	ArticleService *ArticleService
 	CateService    *CateService
+	TagService     *TagService
 	OssService     inter.OssService
 }
 
@@ -31,6 +32,7 @@ func New(db *gorm.DB, cache *redis.Client, ossConfig config.Oss) *Service {
 		UserService:    NewUserService(userRepo),
 		ArticleService: NewArticleService(articleRepo, tagRepo),
 		CateService:    NewCateService(cateRepo),
+		TagService:     NewTagService(tagRepo),
 		OssService:     ossSvc,
 	}
 }

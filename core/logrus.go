@@ -11,11 +11,11 @@ import (
 
 // 初始化日志
 func InitLogger(config config.Logger) *logrus.Logger {
-	mLog := logrus.New()
+	log := logrus.New()
 	//日志输出位置
-	mLog.SetOutput(os.Stdout)
-	mLog.SetReportCaller(global.Conf.Logger.ShowLine) // 打印调用信息
-	mLog.SetFormatter(&logrus.TextFormatter{
+	log.SetOutput(os.Stdout)
+	log.SetReportCaller(global.Conf.Logger.ShowLine) // 打印调用信息
+	log.SetFormatter(&logrus.TextFormatter{
 		TimestampFormat: "2006-01-02 15:04:05",
 		FullTimestamp:   true,
 	})
@@ -23,6 +23,6 @@ func InitLogger(config config.Logger) *logrus.Logger {
 	if err != nil {
 		panic(err)
 	}
-	mLog.SetLevel(level)
-	return mLog
+	log.SetLevel(level)
+	return log
 }

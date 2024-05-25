@@ -25,18 +25,20 @@ func Success(c *gin.Context, data any) {
 	})
 }
 
-func Error(c *gin.Context, err *errcode.Error) {
-	c.JSON(http.StatusOK, Response{
-		Code:    err.Code(),
-		Message: err.Msg(),
-		Data:    gin.H{},
-	})
-}
-
-func ErrorRaw(c *gin.Context, err error) {
-	c.JSON(http.StatusOK, Response{
-		Code:    9999,
-		Message: err.Error(),
-		Data:    gin.H{},
-	})
+func Error(c *gin.Context, err error) {
+	// 断言
+	codeErr, ok := err.(errcode.Error)
+	if ok {
+		c.JSON(http.StatusOK, Response{
+			Code:    codeErr.Code(),
+			Message: codeErr.Msg(),
+			Data:    gin.H{},
+		})
+	} else {
+		c.JSON(http.StatusOK, Response{
+			Code:    9999,
+			Message: err.Error(),
+			Data:    gin.H{},
+		})
+	}
 }

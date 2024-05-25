@@ -4,8 +4,6 @@ import (
 	"gvb/dao"
 	"gvb/models/entity"
 	"gvb/models/req"
-
-	"gorm.io/gorm"
 )
 
 type CateService struct {
@@ -28,11 +26,7 @@ func (c *CateService) GetList() ([]entity.Category, error) {
 }
 
 func (c *CateService) Update(reqCate *req.Cate) error {
-	cate := entity.Category{
-		Model: gorm.Model{ID: reqCate.ID},
-		Name:  reqCate.Name,
-	}
-	return c.cateRepo.Update(cate)
+	return c.cateRepo.Update(reqCate.Name, reqCate.ID)
 }
 
 func (c *CateService) Delete(id uint) error {

@@ -1,7 +1,6 @@
 package req
 
 type Article struct {
-	Uuid       uint32   `json:"uuid"` //uuid 在更新文章时需要
 	Title      string   `json:"title" binding:"required"`
 	Content    string   `json:"content" binding:"required"`
 	CoverImage string   `json:"cover_image"`                // 文章封面
