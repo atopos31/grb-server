@@ -18,6 +18,11 @@ func NewArticleRepo(db *gorm.DB, cache *redis.Client) *ArticleRepo {
 }
 
 func (a *ArticleRepo) Create(article entity.Article) error {
+	// customTimestamp := int64(1716554937000)
+	// customCreatedAt := time.UnixMilli(customTimestamp)
+	// article.Model = gorm.Model{
+	// 	CreatedAt: customCreatedAt,
+	// }
 	return a.db.Create(&article).Error
 }
 
@@ -64,6 +69,7 @@ func (a *ArticleRepo) UpdateByUuid(newArticle *req.Article, uuid string) (*entit
 		tx.Rollback()
 		return nil, err
 	}
+
 	article.Title = newArticle.Title
 	article.Content = newArticle.Content
 	article.CoverImage = newArticle.CoverImage

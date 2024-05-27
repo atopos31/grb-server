@@ -21,15 +21,16 @@ func create(c *gin.Context) {
 	articleReq := new(req.Article)
 
 	if err := c.ShouldBindJSON(articleReq); err != nil {
-		res.Error(c, err)
+		res.Error(c, errcode.ErrInvalidParam)
 		return
 	}
 
-	if err := service.Svc.ArticleService.Create(articleReq); err != nil {
+	uuid, err := service.Svc.ArticleService.Create(articleReq)
+	if err != nil {
 		res.Error(c, errcode.ErrInternalServer)
 		return
 	}
-	res.Success(c, nil)
+	res.Success(c, uuid)
 }
 
 // @Summary 获取文章列表

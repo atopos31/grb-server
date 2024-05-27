@@ -4,6 +4,8 @@ import (
 	"gvb/dao"
 	"gvb/models/entity"
 	"gvb/models/req"
+	"strconv"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -17,10 +19,10 @@ func NewArticleService(repo *dao.ArticleRepo, tagRepo *dao.TagRepo) *ArticleServ
 	return &ArticleService{articleRepo: repo, tagRepo: tagRepo}
 }
 
-func (a *ArticleService) Create(reqArticle *req.Article) error {
+func (a *ArticleService) Create(reqArticle *req.Article) (uint32, error) {
 	tags, err := a.tagRepo.FirstOrCreateTags(reqArticle.TagNames)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	article := entity.Article{
 		Title:      reqArticle.Title,
@@ -33,11 +35,17 @@ func (a *ArticleService) Create(reqArticle *req.Article) error {
 		Tags:       tags,
 	}
 
-	if err := a.articleRepo.Create(article); err != nil {
-		return err
+	//自定义发布时间
+	if reqArticle.CreatedAt != "" {
+		int64time, _ := strconv.ParseInt(reqArticle.CreatedAt, 10, 64)
+		article.CreatedAt = time.UnixMilli(int64time)
 	}
 
-	return nil
+	if err := a.articleRepo.Create(article); err != nil {
+		return 0, err
+	}
+
+	return article.Uuid, nil
 }
 
 func (a *ArticleService) GetList(reqPage *req.ArticleList) ([]entity.Article, error) {

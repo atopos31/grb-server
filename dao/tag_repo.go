@@ -78,5 +78,8 @@ func (t *TagRepo) Update(name string, id uint) error {
 }
 
 func (t *TagRepo) Delete(id uint) error {
+	if err := t.db.Model(&entity.Tag{Model: gorm.Model{ID: id}}).Association("Articles").Clear(); err != nil {
+		return err
+	}
 	return t.db.Delete(&entity.Tag{}, id).Error
 }
