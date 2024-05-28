@@ -4,6 +4,7 @@ import (
 	"gvb/dao"
 	"gvb/models/entity"
 	"gvb/models/req"
+	"gvb/models/res"
 	"strconv"
 	"time"
 
@@ -48,11 +49,11 @@ func (a *ArticleService) Create(reqArticle *req.Article) (uint32, error) {
 	return article.Uuid, nil
 }
 
-func (a *ArticleService) GetList(reqPage *req.ArticleList) ([]entity.Article, error) {
+func (a *ArticleService) GetList(reqPage *req.ArticleList) ([]res.Article, error) {
 	return a.articleRepo.GetList(reqPage.PageSize, reqPage.PageNum)
 }
 
-func (a *ArticleService) GetByUuid(uuid string) (entity.Article, error) {
+func (a *ArticleService) GetByUuid(uuid string) (res.Article, error) {
 	return a.articleRepo.GetByUuid(uuid)
 }
 

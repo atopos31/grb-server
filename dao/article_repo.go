@@ -3,6 +3,7 @@ package dao
 import (
 	"gvb/models/entity"
 	"gvb/models/req"
+	"gvb/models/res"
 
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
@@ -18,19 +19,17 @@ func NewArticleRepo(db *gorm.DB, cache *redis.Client) *ArticleRepo {
 }
 
 func (a *ArticleRepo) Create(article entity.Article) error {
-	// customTimestamp := int64(1716554937000)
-	// customCreatedAt := time.UnixMilli(customTimestamp)
-	// article.Model = gorm.Model{
-	// 	CreatedAt: customCreatedAt,
-	// }
 	return a.db.Create(&article).Error
 }
 
 // GetList 获取文章列表
-func (a *ArticleRepo) GetList(pageSize, pageNum int) ([]entity.Article, error) {
-	var articles []entity.Article
-	err := a.db.Preload("Tags").Preload("Category").
-		Offset((pageNum - 1) * pageSize).Limit(pageSize).Order("Created_At DESC").Find(&articles).Error
+func (a *ArticleRepo) GetList(pageSize, pageNum int) ([]res.Article, error) {
+	var articles []res.Article
+	err := a.db.
+		Preload("Tags").Preload("Category").
+		Select(res.ArticleListClumns).
+		Offset((pageNum - 1) * pageSize).Limit(pageSize).
+		Order("created_at desc").Find(&articles).Error
 	if err != nil {
 		return nil, err
 	}
@@ -38,9 +37,9 @@ func (a *ArticleRepo) GetList(pageSize, pageNum int) ([]entity.Article, error) {
 }
 
 // GetByUuid 根据uuid获取文章
-func (a *ArticleRepo) GetByUuid(uuid string) (entity.Article, error) {
-	var article entity.Article
-	err := a.db.Preload("Tags").Preload("Category").Where("uuid = ?", uuid).First(&article).Error
+func (a *ArticleRepo) GetByUuid(uuid string) (res.Article, error) {
+	var article res.Article
+	err := a.db.Select(res.ArticleClumns).Preload("Tags").Preload("Category").Where("uuid = ?", uuid).First(&article).Error
 	if err != nil {
 		return article, err
 	}

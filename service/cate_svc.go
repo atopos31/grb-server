@@ -4,6 +4,7 @@ import (
 	"gvb/dao"
 	"gvb/models/entity"
 	"gvb/models/req"
+	"gvb/models/res"
 )
 
 type CateService struct {
@@ -21,7 +22,7 @@ func (c *CateService) Create(reqCate *req.Cate) error {
 	return c.cateRepo.Create(cate)
 }
 
-func (c *CateService) GetList() ([]entity.Category, error) {
+func (c *CateService) GetList() ([]res.Category, error) {
 	return c.cateRepo.GetList()
 }
 

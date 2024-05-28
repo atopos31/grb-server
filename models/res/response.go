@@ -26,7 +26,7 @@ func Success(c *gin.Context, data any) {
 }
 
 func Error(c *gin.Context, err error) {
-	// 断言
+	// 断言 如果是自定义的Error
 	codeErr, ok := err.(errcode.Error)
 	if ok {
 		c.JSON(http.StatusOK, Response{

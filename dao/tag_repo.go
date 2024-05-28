@@ -4,6 +4,7 @@ import (
 	"errors"
 	"gvb/models/entity"
 	"gvb/models/errcode"
+	"gvb/models/res"
 
 	"github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
@@ -54,9 +55,9 @@ func (t *TagRepo) Create(tag entity.Tag) error {
 	return nil
 }
 
-func (t *TagRepo) GetList() ([]entity.Tag, error) {
-	var tags []entity.Tag
-	if err := t.db.Find(&tags).Error; err != nil {
+func (t *TagRepo) GetList() ([]res.Tag, error) {
+	var tags []res.Tag
+	if err := t.db.Select("id", "name").Order("created_at asc").Find(&tags).Error; err != nil {
 		return nil, err
 	}
 

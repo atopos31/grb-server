@@ -4,6 +4,7 @@ import (
 	"errors"
 	"gvb/models/entity"
 	"gvb/models/errcode"
+	"gvb/models/res"
 
 	"github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
@@ -30,9 +31,9 @@ func (c *CateRepo) Create(cate entity.Category) error {
 	return nil
 }
 
-func (c *CateRepo) GetList() ([]entity.Category, error) {
-	var cates []entity.Category
-	err := c.db.Find(&cates).Error
+func (c *CateRepo) GetList() ([]res.Category, error) {
+	var cates []res.Category
+	err := c.db.Select("id", "name").Order("created_at asc").Find(&cates).Error
 	return cates, err
 }
 

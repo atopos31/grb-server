@@ -4,6 +4,7 @@ import (
 	"gvb/dao"
 	"gvb/models/entity"
 	"gvb/models/req"
+	"gvb/models/res"
 )
 
 type TagService struct {
@@ -24,7 +25,7 @@ func (t *TagService) Create(reqTag *req.Tag) error {
 	return t.tagRepo.Create(tag)
 }
 
-func (t *TagService) GetList() ([]entity.Tag, error) {
+func (t *TagService) GetList() ([]res.Tag, error) {
 	return t.tagRepo.GetList()
 }
 
