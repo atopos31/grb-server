@@ -7,6 +7,7 @@ import (
 
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type ArticleRepo struct {
@@ -26,10 +27,10 @@ func (a *ArticleRepo) Create(article entity.Article) error {
 func (a *ArticleRepo) GetList(pageSize, pageNum int) ([]res.Article, error) {
 	var articles []res.Article
 	err := a.db.
-		Preload("Tags").Preload("Category").
-		Select(res.ArticleListClumns).
-		Offset((pageNum - 1) * pageSize).Limit(pageSize).
-		Order("created_at desc").Find(&articles).Error
+		Preload(clause.Associations).                     // 预加载全部
+		Select(res.ArticleListClumns).                    // 指定查询字段
+		Offset((pageNum - 1) * pageSize).Limit(pageSize). // 分页
+		Order("created_at desc").Find(&articles).Error    // 排序查询
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +40,10 @@ func (a *ArticleRepo) GetList(pageSize, pageNum int) ([]res.Article, error) {
 // GetByUuid 根据uuid获取文章
 func (a *ArticleRepo) GetByUuid(uuid string) (res.Article, error) {
 	var article res.Article
-	err := a.db.Select(res.ArticleClumns).Preload("Tags").Preload("Category").Where("uuid = ?", uuid).First(&article).Error
+	err := a.db.
+		Preload(clause.Associations).
+		Select(res.ArticleClumns).
+		Where("uuid = ?", uuid).First(&article).Error
 	if err != nil {
 		return article, err
 	}
@@ -48,16 +52,24 @@ func (a *ArticleRepo) GetByUuid(uuid string) (res.Article, error) {
 
 // 根据uuid删除文章
 func (a *ArticleRepo) DeleteByUuid(uuid string) error {
+	tx := a.db.Begin()
 	var article entity.Article
-	if err := a.db.Preload("Tags").Where("uuid = ?", uuid).First(&article).Error; err != nil {
+	if err := tx.Preload("Tags").Where("uuid = ?", uuid).First(&article).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
 	// 删除文章对应的标签
-	if err := a.db.Model(&article).Association("Tags").Clear(); err != nil {
+	if err := tx.Model(&article).Association("Tags").Clear(); err != nil {
+		tx.Rollback()
+		return err
+	}
+	// 删除文章
+	if err := tx.Delete(&article).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
 
-	return a.db.Delete(&article).Error
+	return tx.Commit().Error
 }
 
 // 根据uuid更新文章

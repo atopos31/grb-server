@@ -15,7 +15,7 @@ func NewCateService(repo *dao.CateRepo) *CateService {
 	return &CateService{cateRepo: repo}
 }
 
-func (c *CateService) Create(reqCate *req.Cate) error {
+func (c *CateService) Create(reqCate *req.Cate) (uint, error) {
 	cate := entity.Category{
 		Name: reqCate.Name,
 	}

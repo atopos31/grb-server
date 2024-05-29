@@ -23,11 +23,12 @@ func create(c *gin.Context) {
 		res.Error(c, errcode.ErrInvalidParam)
 		return
 	}
-	if err := service.Svc.TagService.Create(tag); err != nil {
+	id, err := service.Svc.TagService.Create(tag)
+	if err != nil {
 		res.Error(c, err)
 		return
 	}
-	res.Success(c, nil)
+	res.Success(c, id)
 }
 
 // @Summary 获取标签列表

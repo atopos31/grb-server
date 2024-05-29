@@ -23,12 +23,13 @@ func create(c *gin.Context) {
 		res.Error(c, err)
 		return
 	}
-	if err := service.Svc.CateService.Create(cateReq); err != nil {
+	id, err := service.Svc.CateService.Create(cateReq)
+	if err != nil {
 		res.Error(c, err)
 		return
 	}
 
-	res.Success(c, nil)
+	res.Success(c, id)
 }
 
 // @Summary 获取分类列表

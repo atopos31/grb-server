@@ -41,18 +41,18 @@ func (t *TagRepo) FirstOrCreateTags(tagnames []string) ([]entity.Tag, error) {
 	return realTags, tx.Commit().Error
 }
 
-func (t *TagRepo) Create(tag entity.Tag) error {
+func (t *TagRepo) Create(tag entity.Tag) (uint, error) {
 	if err := t.db.Create(&tag).Error; err != nil {
 		var mysqlErr *mysql.MySQLError
 		if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
 			// 1062 unique数据重复冲突
-			return errcode.ErrDataIsExits
+			return 0, errcode.ErrDataIsExits
 		} else {
-			return err
+			return 0, err
 		}
 	}
 
-	return nil
+	return tag.ID, nil
 }
 
 func (t *TagRepo) GetList() ([]res.Tag, error) {

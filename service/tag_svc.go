@@ -17,7 +17,7 @@ func NewTagService(repo *dao.TagRepo) *TagService {
 	}
 }
 
-func (t *TagService) Create(reqTag *req.Tag) error {
+func (t *TagService) Create(reqTag *req.Tag) (uint, error) {
 	tag := entity.Tag{
 		Name: reqTag.Name,
 	}
