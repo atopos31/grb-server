@@ -25,12 +25,13 @@ func create(c *gin.Context) {
 		return
 	}
 
-	uuid, err := service.Svc.ArticleService.Create(articleReq)
+	resCreate, err := service.Svc.ArticleService.Create(articleReq)
 	if err != nil {
 		res.Error(c, errcode.ErrInternalServer)
 		return
 	}
-	res.Success(c, uuid)
+
+	res.Success(c, resCreate)
 }
 
 // @Summary 获取文章列表
@@ -118,10 +119,10 @@ func update(c *gin.Context) {
 		res.Error(c, errcode.ErrInvalidParam)
 		return
 	}
-
-	if err := service.Svc.ArticleService.Update(articleReq, uuid); err != nil {
+	resUpdate, err := service.Svc.ArticleService.Update(articleReq, uuid)
+	if err != nil {
 		res.Error(c, errcode.ErrInternalServer)
 		return
 	}
-	res.Success(c, nil)
+	res.Success(c, resUpdate)
 }

@@ -7,20 +7,27 @@ import (
 )
 
 type Article struct {
-	ID         uint `gorm:"primarykey"`
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
-	Uuid       uint32
-	Title      string
-	Summary    string
-	Content    string
-	CoverImage string
-	Views      int
-	CategoryID uint
-	Category   Category
-	Tags       []Tag          `gorm:"many2many:articles_tags;"`
+	ID         uint           `gorm:"primarykey" json:"id"`
+	CreatedAt  time.Time      `json:"created_at"`
+	UpdatedAt  time.Time      `json:"updated_at"`
+	Uuid       uint32         `json:"uuid"`
+	Title      string         `json:"title"`
+	Summary    string         `json:"summary"`
+	Content    string         `json:"content"`
+	CoverImage string         `json:"cover_image"`
+	Views      int            `json:"views"`
+	Status     uint8          `json:"status"`
+	Top        uint8          `json:"top"`
+	CategoryID uint           `json:"category_id"`
+	Category   Category       `json:"category"`
+	Tags       []Tag          `gorm:"many2many:articles_tags;" json:"tags"`
 	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"` //用来避免查询到软删除的数据
 }
 
+type ArticleCreateOrUpdate struct {
+	Uuid   uint32 `json:"uuid"`
+	Status uint8  `json:"status"`
+}
+
 var ArticleListClumns = []string{"id", "created_at", "updated_at", "uuid", "title", "summary", "cover_image", "category_id", "views"}
-var ArticleClumns = []string{"id", "created_at", "updated_at", "uuid", "title", "summary", "content", "cover_image", "category_id", "views"}
+var ArticleClumns = []string{"id", "created_at", "updated_at", "uuid", "title", "summary", "content", "cover_image", "category_id", "views", "status", "top"}

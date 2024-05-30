@@ -20,10 +20,11 @@ func NewArticleService(repo *dao.ArticleRepo, tagRepo *dao.TagRepo) *ArticleServ
 	return &ArticleService{articleRepo: repo, tagRepo: tagRepo}
 }
 
-func (a *ArticleService) Create(reqArticle *req.Article) (uint32, error) {
+func (a *ArticleService) Create(reqArticle *req.Article) (res.ArticleCreateOrUpdate, error) {
+	var res = res.ArticleCreateOrUpdate{Uuid: 0, Status: 0}
 	tags, err := a.tagRepo.FirstOrCreateTags(reqArticle.TagNames)
 	if err != nil {
-		return 0, err
+		return res, err
 	}
 	article := entity.Article{
 		Title:      reqArticle.Title,
@@ -36,6 +37,12 @@ func (a *ArticleService) Create(reqArticle *req.Article) (uint32, error) {
 		Tags:       tags,
 	}
 
+	if len(article.Content) > 100 {
+		article.Summary = article.Content[:100]
+	} else {
+		article.Summary = article.Content
+	}
+
 	//自定义发布时间
 	if reqArticle.CreatedAt != "" {
 		int64time, _ := strconv.ParseInt(reqArticle.CreatedAt, 10, 64)
@@ -43,10 +50,13 @@ func (a *ArticleService) Create(reqArticle *req.Article) (uint32, error) {
 	}
 
 	if err := a.articleRepo.Create(article); err != nil {
-		return 0, err
+		return res, err
 	}
 
-	return article.Uuid, nil
+	res.Uuid = article.Uuid
+	res.Status = article.Status
+
+	return res, nil
 }
 
 func (a *ArticleService) GetList(reqPage *req.ArticleList) ([]res.Article, error) {
@@ -61,16 +71,23 @@ func (a *ArticleService) DeleteByUuid(uuid string) error {
 	return a.articleRepo.DeleteByUuid(uuid)
 }
 
-func (a *ArticleService) Update(newArticle *req.Article, uuid string) error {
+func (a *ArticleService) Update(newArticle *req.Article, uuid string) (res.ArticleCreateOrUpdate, error) {
+	var res = res.ArticleCreateOrUpdate{Uuid: 0, Status: 0}
 	article, err := a.articleRepo.UpdateByUuid(newArticle, uuid)
 	if err != nil {
-		return err
+		return res, err
 	}
 
 	tags, err := a.tagRepo.FirstOrCreateTags(newArticle.TagNames)
 	if err != nil {
-		return err
+		return res, err
+	}
+	if err := a.articleRepo.UpdateTags(article, tags); err != nil {
+		return res, err
 	}
 
-	return a.articleRepo.UpdateTags(article, tags)
+	res.Uuid = article.Uuid
+	res.Status = article.Status
+
+	return res, nil
 }
