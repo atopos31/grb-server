@@ -28,7 +28,6 @@ func main() {
 	// 输出配置
 	if global.Conf.Sys.Env == "debug" {
 		global.Log.Infof("[Config]:%v", global.Conf)
-		// logrus.Infof("[Config]:%v", global.Conf)
 	}
 
 	router.Run(global.Conf.Sys.Addr())

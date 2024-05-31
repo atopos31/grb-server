@@ -43,9 +43,7 @@ func (t *TagRepo) FirstOrCreateTags(tagnames []string) ([]entity.Tag, error) {
 
 func (t *TagRepo) Create(tag entity.Tag) (uint, error) {
 	if err := t.db.Create(&tag).Error; err != nil {
-		var mysqlErr *mysql.MySQLError
-		if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
-			// 1062 unique数据重复冲突
+		if errcode.CheckMysqlErrDataIsExits(err) {
 			return 0, errcode.ErrDataIsExits
 		} else {
 			return 0, err

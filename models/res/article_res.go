@@ -28,6 +28,3 @@ type ArticleCreateOrUpdate struct {
 	Uuid   uint32 `json:"uuid"`
 	Status uint8  `json:"status"`
 }
-
-var ArticleListClumns = []string{"id", "created_at", "updated_at", "uuid", "title", "summary", "cover_image", "category_id", "views"}
-var ArticleClumns = []string{"id", "created_at", "updated_at", "uuid", "title", "summary", "content", "cover_image", "category_id", "views", "status", "top"}

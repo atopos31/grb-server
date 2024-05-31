@@ -14,7 +14,7 @@ import (
 // 初始化数据库
 func InitGorm(config config.Mysql) *gorm.DB {
 	if config.Host == "" || config.Port == "" {
-		panic(errors.New("mysql配置错误"))
+		panic(errors.New("Mysql config error ,Host or port is NULL!"))
 	}
 
 	dsn := config.Dsn()
@@ -29,12 +29,11 @@ func InitGorm(config config.Mysql) *gorm.DB {
 
 	sqlDB, _ := db.DB()
 	sqlDB.SetMaxIdleConns(10)               // 设置空闲连接池中连接的最大数量
-	sqlDB.SetMaxOpenConns(100)              // 	设置连接池
+	sqlDB.SetMaxOpenConns(100)              // 设置连接池
 	sqlDB.SetConnMaxLifetime(time.Hour * 4) // 设置连接超时时间
 
 	// 初始化表
 	entity.InitEntity(db)
-	// db.Create(&entity.Category{Name: "默认分类"})
 
 	return db
 }

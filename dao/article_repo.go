@@ -4,6 +4,8 @@ import (
 	"gvb/models/entity"
 	"gvb/models/req"
 	"gvb/models/res"
+	"strconv"
+	"time"
 
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
@@ -19,6 +21,14 @@ func NewArticleRepo(db *gorm.DB, cache *redis.Client) *ArticleRepo {
 	return &ArticleRepo{db: db, cache: cache}
 }
 
+func (a *ArticleRepo) GetListClumns() []string {
+	return []string{"id", "created_at", "updated_at", "uuid", "title", "summary", "cover_image", "category_id", "views"}
+}
+
+func (a *ArticleRepo) GetClumns() []string {
+	return []string{"id", "created_at", "updated_at", "uuid", "title", "summary", "content", "cover_image", "category_id", "views", "status", "top"}
+}
+
 func (a *ArticleRepo) Create(article entity.Article) error {
 	return a.db.Create(&article).Error
 }
@@ -27,10 +37,11 @@ func (a *ArticleRepo) Create(article entity.Article) error {
 func (a *ArticleRepo) GetList(pageSize, pageNum int) ([]res.Article, error) {
 	var articles []res.Article
 	err := a.db.
-		Preload(clause.Associations).                     // 预加载全部
-		Select(res.ArticleListClumns).                    // 指定查询字段
-		Offset((pageNum - 1) * pageSize).Limit(pageSize). // 分页
-		Order("created_at desc").Find(&articles).Error    // 排序查询
+		Preload(clause.Associations).                  // 预加载全部
+		Select(a.GetListClumns()).                     // 指定查询字段
+		Offset((pageNum-1)*pageSize).Limit(pageSize).  // 分页
+		Where("status = ?", 1).                        // 状态为1 已发布文章
+		Order("created_at desc").Find(&articles).Error // 排序查询
 	if err != nil {
 		return nil, err
 	}
@@ -38,14 +49,14 @@ func (a *ArticleRepo) GetList(pageSize, pageNum int) ([]res.Article, error) {
 }
 
 // GetByUuid 根据uuid获取文章
-func (a *ArticleRepo) GetByUuid(uuid string) (res.Article, error) {
-	var article res.Article
+func (a *ArticleRepo) GetByUuid(uuid string) (*res.Article, error) {
+	article := new(res.Article)
 	err := a.db.
 		Preload(clause.Associations).
-		Select(res.ArticleClumns).
-		Where("uuid = ?", uuid).First(&article).Error
+		Select(a.GetClumns()).
+		Where("uuid = ?", uuid).First(article).Error
 	if err != nil {
-		return article, err
+		return nil, err
 	}
 	return article, err
 }
@@ -87,6 +98,8 @@ func (a *ArticleRepo) UpdateByUuid(newArticle *req.Article, uuid string) (*entit
 	article.CategoryID = newArticle.CategoryID
 	article.Top = newArticle.Top
 	article.Status = newArticle.Status
+	int64time, _ := strconv.ParseInt(newArticle.CreatedAt, 10, 64)
+	article.CreatedAt = time.UnixMilli(int64time)
 
 	if err := tx.Save(article).Error; err != nil {
 		tx.Rollback()

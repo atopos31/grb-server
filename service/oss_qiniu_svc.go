@@ -44,7 +44,7 @@ func (o *OssQinui) GetUploadToken() (res.OssConfig, error) {
 	// 生成上传凭证
 	uptoken := putPolicy.UploadToken(mac)
 
-	resGetUpToken := res.OssConfig{
+	ossConfig := res.OssConfig{
 		Domain:     o.Domain,
 		Bucket:     o.bucket,
 		Region:     o.region,
@@ -52,5 +52,5 @@ func (o *OssQinui) GetUploadToken() (res.OssConfig, error) {
 		ImgProcess: o.imgProcess,
 		UpToken:    uptoken,
 	}
-	return resGetUpToken, nil
+	return ossConfig, nil
 }

@@ -1,12 +1,10 @@
 package dao
 
 import (
-	"errors"
 	"gvb/models/entity"
 	"gvb/models/errcode"
 	"gvb/models/res"
 
-	"github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -20,9 +18,7 @@ func NewCateRepo(db *gorm.DB) *CateRepo {
 
 func (c *CateRepo) Create(cate entity.Category) (uint, error) {
 	if err := c.db.Create(&cate).Error; err != nil {
-		var mysqlErr *mysql.MySQLError
-		if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
-			// 1062 unique数据重复冲突
+		if errcode.CheckMysqlErrDataIsExits(err) {
 			return 0, errcode.ErrDataIsExits
 		} else {
 			return 0, err
@@ -52,9 +48,7 @@ func (c *CateRepo) GetByID(id uint) (entity.Category, error) {
 
 func (c *CateRepo) Update(name string, id uint) error {
 	if err := c.db.Model(&entity.Category{}).Where("id = ?", id).Update("name", name).Error; err != nil {
-		var mysqlErr *mysql.MySQLError
-		if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
-			// 1062 unique数据重复冲突
+		if errcode.CheckMysqlErrDataIsExits(err) {
 			return errcode.ErrDataIsExits
 		} else {
 			return err
