@@ -21,6 +21,9 @@ type OssQinui struct {
 }
 
 func NewOssQinui(config config.OssQiniu) *OssQinui {
+	if config.AccessKey == "" || config.SecretKey == "" || config.Bucket == "" || config.Domain == "" || config.Region == "" {
+		panic("oss Qiniu config error")
+	}
 	return &OssQinui{
 		accessKey:  config.AccessKey,
 		secretKey:  config.SecretKey,

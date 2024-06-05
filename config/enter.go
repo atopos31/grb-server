@@ -7,4 +7,5 @@ type Config struct {
 	Mysql  Mysql  `mapstructure:"mysql"`
 	Redis  Redis  `mapstructure:"redis"`
 	Oss    Oss    `mapstructure:"oss"`
+	Ai     Ai     `mapstructure:"ai"`
 }
