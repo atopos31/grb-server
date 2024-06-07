@@ -29,6 +29,10 @@ func (t *TagService) GetList() ([]res.Tag, error) {
 	return t.tagRepo.GetList()
 }
 
+func (t *TagService) GetHotList(size int) ([]res.Tag, error) {
+	return t.tagRepo.GetHotList(size)
+}
+
 func (t *TagService) Update(reqTag *req.Tag) error {
 	return t.tagRepo.Update(reqTag.Name, reqTag.ID)
 }

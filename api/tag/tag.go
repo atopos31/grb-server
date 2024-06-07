@@ -47,6 +47,29 @@ func getList(c *gin.Context) {
 	res.Success(c, tags)
 }
 
+// @Summary 获取热门标签列表
+// @Description 获取热门标签列表
+// @Tags 标签
+// @param size path int true "热门标签数量"
+// @Produce json
+// @Success 200 {object} res.Response
+// @Router /tag/hotlist/:size [get]
+func getHotList(c *gin.Context) {
+	size := c.Param("size")
+	iszie, err := strconv.Atoi(size)
+	if err != nil {
+		res.Error(c, errcode.ErrInvalidParam)
+		return
+	}
+
+	tags, err := service.Svc.TagService.GetHotList(iszie)
+	if err != nil {
+		res.Error(c, err)
+		return
+	}
+	res.Success(c, tags)
+}
+
 // @Summary 更新标签
 // @Description 更新标签
 // @Tags 标签

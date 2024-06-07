@@ -14,7 +14,7 @@ type AiHunyuan struct {
 
 func NewAiHunyuan(config config.AiHunyuan) *AiHunyuan {
 	summaryRequest := hunyuan.NewChatCompletionsRequest()
-	
+
 	return &AiHunyuan{
 		Credential: common.NewCredential(
 			config.SecretId,

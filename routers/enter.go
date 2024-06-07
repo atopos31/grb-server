@@ -3,6 +3,7 @@ package routers
 import (
 	"gvb/api/article"
 	"gvb/api/category"
+	"gvb/api/info"
 	"gvb/api/oss"
 	"gvb/api/tag"
 	"gvb/api/user"
@@ -32,6 +33,7 @@ func InitRouter(config config.System) *gin.Engine {
 	category.RegisRouter(routerGroup)
 	tag.RegisRouter(routerGroup)
 	oss.RegisRouter(routerGroup)
+	info.RegisRouter(routerGroup)
 
 	return router
 }

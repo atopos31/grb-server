@@ -12,11 +12,12 @@ import (
 var Svc *Service
 
 type Service struct {
-	UserService    *UserService
-	ArticleService *ArticleService
-	CateService    *CateService
-	TagService     *TagService
-	OssService     inter.OssService // oss接口
+	UserService     *UserService
+	ArticleService  *ArticleService
+	CateService     *CateService
+	TagService      *TagService
+	SiteInfoService *SiteInfoService
+	OssService      inter.OssService // oss接口
 }
 
 func New(db *gorm.DB, cache *redis.Client, ossConfig config.Oss) *Service {
@@ -29,10 +30,11 @@ func New(db *gorm.DB, cache *redis.Client, ossConfig config.Oss) *Service {
 	ossSvc := NewOssQinui(ossConfig.OssQiniu)
 
 	return &Service{
-		UserService:    NewUserService(userRepo),
-		ArticleService: NewArticleService(articleRepo, tagRepo),
-		CateService:    NewCateService(cateRepo),
-		TagService:     NewTagService(tagRepo),
-		OssService:     ossSvc,
+		UserService:     NewUserService(userRepo),
+		ArticleService:  NewArticleService(articleRepo, tagRepo),
+		CateService:     NewCateService(cateRepo),
+		TagService:      NewTagService(tagRepo),
+		SiteInfoService: NewSiteInfoService(db, cache),
+		OssService:      ossSvc,
 	}
 }

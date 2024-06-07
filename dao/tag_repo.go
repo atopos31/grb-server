@@ -62,6 +62,21 @@ func (t *TagRepo) GetList() ([]res.Tag, error) {
 	return tags, nil
 }
 
+func (t *TagRepo) GetHotList(size int) ([]res.Tag, error) {
+	var hotTags []res.Tag
+	err := t.db.Model(&entity.Tag{}).
+		Select("tags.*, COUNT(articles_tags.tag_id) AS tag_count").
+		Joins("INNER JOIN articles_tags ON tags.id = articles_tags.tag_id").
+		Group("tags.id").
+		Order("tag_count DESC").
+		Limit(size).
+		Scan(&hotTags).Error
+	if err != nil {
+		return nil, err
+	}
+	return hotTags, nil
+}
+
 func (t *TagRepo) Update(name string, id uint) error {
 	if err := t.db.Model(&entity.Tag{}).Where("id = ?", id).Update("name", name).Error; err != nil {
 		var mysqlErr *mysql.MySQLError
