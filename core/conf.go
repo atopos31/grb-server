@@ -11,21 +11,23 @@ import (
 )
 
 func InitConf(configPath string) *config.Config {
-	viper.SetConfigFile(configPath)
+	confViper := viper.New()
+
+	confViper.SetConfigFile(configPath)
 	config := new(config.Config)
-	var err error
-	if err = viper.ReadInConfig(); err != nil {
+
+	if err := confViper.ReadInConfig(); err != nil {
 		println("viper.ReadInConfig failed,please enter " + configPath + "exit!")
 		panic(err)
 	}
 
-	if err = viper.Unmarshal(config); err != nil {
+	if err := confViper.Unmarshal(config); err != nil {
 		panic(err)
 	}
 
-	viper.WatchConfig()
-	viper.OnConfigChange(func(in fsnotify.Event) {
-		if err := viper.Unmarshal(config); err != nil {
+	confViper.WatchConfig()
+	confViper.OnConfigChange(func(in fsnotify.Event) {
+		if err := confViper.Unmarshal(config); err != nil {
 			global.Log.Error("viper.Unmarshal failed", err)
 			return
 		}
