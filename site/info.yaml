@@ -7,8 +7,48 @@ social:
     url: https://juejin.cn/user/1157118868073149
   - name: Email
     url: mailto:hackerxiao@foxmail.com
+
 user:
   name: Hackerxiao
   avatar: https://www.hackerxiao.online/wp-content/uploads/2023/09/head.jpg
+
 site:
   record: 辽ICP备2022010174号
+
+badges:
+  - nameLeft: 前端框架
+    nameRight: React v18.3.1
+    href: https://react.dev/
+    logo: typescript
+    colorRight: rgb(88 196 220)
+  
+  - nameLeft: 后端框架
+    nameRight: Gin v1.10.1
+    href: https://gin-gonic.com/zh-cn/
+    logo: go
+    colorRight: rgb(88 196 220)
+  
+  - nameLeft: 构建工具
+    nameRight: Vite v5.2.11
+    href: https://cn.vitejs.dev/
+    logo: vite
+    colorRight: blue
+  
+  - nameLeft: 托管于
+    nameRight: 阿里云
+    href: https://www.huaweicloud.com/
+    logo: alibabacloud
+    colorRight: red
+  
+  - nameLeft: 对象存储
+    nameRight: 七牛云
+    href: https://marketing.qiniu.com/
+    logo: minio
+    colorRight: blue
+  
+  - nameLeft: 
+    nameRight: Github开源地址
+    href: https://github.com/atopos31/grb-front
+    logo: github
+    colorRight: black
+

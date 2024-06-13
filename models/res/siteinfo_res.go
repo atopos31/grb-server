@@ -1,9 +1,9 @@
 package res
 
 type SiteInfo struct {
-	ArticleCount  int64  `json:"文章数"`
-	CategoryCount int64  `json:"分类数"`
-	TagCount      int64  `json:"标签数"`
-	ViewsCount    int64  `json:"访问量"`
-	Record        string `json:"备案号"`
+	ArticleCount  int64  `json:"articlecount"`
+	CategoryCount int64  `json:"categorycount"`
+	TagCount      int64  `json:"tagcount"`
+	ViewsCount    int64  `json:"viewscount"`
+	Record        string `json:"record"`
 }

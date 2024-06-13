@@ -4,7 +4,6 @@ import (
 	"gvb/config"
 	"gvb/dao"
 	"gvb/service/inter"
-	"gvb/site"
 
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
@@ -22,7 +21,7 @@ type Service struct {
 	AiService       inter.AiService  // ai接口
 }
 
-func New(db *gorm.DB, cache *redis.Client, ossConfig config.Oss, aiConfig config.Ai, siteInfo site.SieInfo) *Service {
+func New(db *gorm.DB, cache *redis.Client, ossConfig config.Oss, aiConfig config.Ai, siteInfoPath string) *Service {
 	userRepo := dao.NewUserRepo(db)
 	articleRepo := dao.NewArticleRepo(db, cache)
 	tagRepo := dao.NewTagRepo(db)
@@ -37,7 +36,7 @@ func New(db *gorm.DB, cache *redis.Client, ossConfig config.Oss, aiConfig config
 		ArticleService:  NewArticleService(articleRepo, tagRepo),
 		CateService:     NewCateService(cateRepo),
 		TagService:      NewTagService(tagRepo),
-		SiteInfoService: NewSiteInfoService(db, cache, siteInfo),
+		SiteInfoService: NewSiteInfoService(db, cache, siteInfoPath),
 		OssService:      ossSvc,
 		AiService:       aiSvc,
 	}

@@ -4,22 +4,29 @@ import (
 	"gvb/models/entity"
 	"gvb/models/res"
 	"gvb/site"
+	"io/ioutil"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
+	"gopkg.in/yaml.v2"
 	"gorm.io/gorm"
 )
 
 const viewkey = "view:"
 
 type SiteInfoService struct {
-	db       *gorm.DB
-	cache    *redis.Client
-	siteInfo site.SieInfo
+	db           *gorm.DB
+	cache        *redis.Client
+	siteInfoPath string
+	siteInfo     *site.SieInfo
 }
 
-func NewSiteInfoService(db *gorm.DB, cache *redis.Client, siteInfo site.SieInfo) *SiteInfoService {
+func NewSiteInfoService(db *gorm.DB, cache *redis.Client, siteInfoPath string) *SiteInfoService {
+	siteInfo, err := loadInfo(siteInfoPath)
+	if err != nil {
+		panic(err)
+	}
 	return &SiteInfoService{
 		db:       db,
 		cache:    cache,
@@ -61,6 +68,38 @@ func (s *SiteInfoService) GetSiteInfo(ctx *gin.Context) (*res.SiteInfo, error) {
 	return siteInfo, nil
 }
 
-func (s *SiteInfoService) GetBasicInfo() site.SieInfo {
-	return s.siteInfo
+func (s *SiteInfoService) GetBasicInfo() res.BasicInfo {
+	return res.BasicInfo{
+		Social: s.siteInfo.Social,
+		User:   s.siteInfo.User,
+	}
+}
+
+func (s *SiteInfoService) GetBadges() []site.Badge {
+	return s.siteInfo.Badges
+}
+
+func loadInfo(filePath string) (*site.SieInfo, error) {
+	file, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return nil, err
+	}
+	siteInfo := new(site.SieInfo)
+	if err := yaml.Unmarshal(file, siteInfo); err != nil {
+		return nil, err
+	}
+
+	return siteInfo, nil
+}
+
+func reloadInfo(filePath string, siteInfo site.SieInfo) (*site.SieInfo, error) {
+	data, err := yaml.Marshal(siteInfo)
+	if err != nil {
+		return nil, err
+	}
+
+	if err = ioutil.WriteFile(filePath, data, 0644); err != nil {
+		return nil, err
+	}
+	return &siteInfo, nil
 }

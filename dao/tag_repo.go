@@ -1,12 +1,10 @@
 package dao
 
 import (
-	"errors"
 	"gvb/models/entity"
 	"gvb/models/errcode"
 	"gvb/models/res"
 
-	"github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -62,13 +60,14 @@ func (t *TagRepo) GetList() ([]res.Tag, error) {
 	return tags, nil
 }
 
+// 获取最近常用标签
 func (t *TagRepo) GetHotList(size int) ([]res.Tag, error) {
 	var hotTags []res.Tag
 	err := t.db.Model(&entity.Tag{}).
-		Select("tags.*, COUNT(articles_tags.tag_id) AS tag_count").
-		Joins("INNER JOIN articles_tags ON tags.id = articles_tags.tag_id").
-		Group("tags.id").
-		Order("tag_count DESC").
+		Select("tags.*, COUNT(articles_tags.tag_id) AS tag_count").          // 统计每个标签的文章数量
+		Joins("INNER JOIN articles_tags ON tags.id = articles_tags.tag_id"). // 内联关联
+		Group("tags.id").                                                    // 分组
+		Order("tag_count DESC").                                             // 排序
 		Limit(size).
 		Scan(&hotTags).Error
 	if err != nil {
@@ -79,8 +78,7 @@ func (t *TagRepo) GetHotList(size int) ([]res.Tag, error) {
 
 func (t *TagRepo) Update(name string, id uint) error {
 	if err := t.db.Model(&entity.Tag{}).Where("id = ?", id).Update("name", name).Error; err != nil {
-		var mysqlErr *mysql.MySQLError
-		if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
+		if errcode.CheckMysqlErrDataIsExits(err) {
 			// 1062 unique数据重复冲突
 			return errcode.ErrDataIsExits
 		} else {

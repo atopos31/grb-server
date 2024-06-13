@@ -14,7 +14,6 @@ func InitSiteInfo(siteInfoPath string) site.SieInfo {
 	}
 
 	var siteInfo site.SieInfo
-
 	if err := yaml.Unmarshal(file, &siteInfo); err != nil {
 		panic(err)
 	}

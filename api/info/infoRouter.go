@@ -7,5 +7,6 @@ func RegisRouter(r *gin.RouterGroup) {
 	{
 		infoApi.GET("/site", GetSiteInfo)
 		infoApi.GET("/basic", GetBasicInfo)
+		infoApi.GET("/badges", GetBadges)
 	}
 }
