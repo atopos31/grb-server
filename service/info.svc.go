@@ -36,7 +36,9 @@ func NewSiteInfoService(db *gorm.DB, cache *redis.Client, siteInfoPath string) *
 
 func (s *SiteInfoService) GetSiteInfo(ctx *gin.Context) (*res.SiteInfo, error) {
 	siteInfo := new(res.SiteInfo)
-	if err := s.db.Model(&entity.Article{}).Count(&siteInfo.ArticleCount).Error; err != nil {
+	if err := s.db.Model(&entity.Article{}).
+		Where("status = ?", 1).
+		Count(&siteInfo.ArticleCount).Error; err != nil {
 		return nil, err
 	}
 	if err := s.db.Model(&entity.Category{}).Count(&siteInfo.CategoryCount).Error; err != nil {

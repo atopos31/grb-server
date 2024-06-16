@@ -12,6 +12,7 @@ type User struct {
 
 type Site struct {
 	Record string `yaml:"record" json:"record"`
+	Title  string `yaml:"title" json:"title"`
 }
 
 type Badge struct {

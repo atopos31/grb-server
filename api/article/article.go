@@ -126,3 +126,29 @@ func update(c *gin.Context) {
 	}
 	res.Success(c, resUpdate)
 }
+
+// @Summary 局部更新文章
+// @Tags 文章
+// @Accept json
+// @Produce json
+// @Param uuid path string true "文章uuid"
+// @Param article body req.ArticleSertion true "文章信息"
+// @Success 200 {object} res.Response
+// @Router /article/update/:uuid [patch]
+func updatesection(c *gin.Context) {
+	uuid := c.Param("uuid")
+	if uuid == "" {
+		res.Error(c, errcode.ErrInvalidParam)
+		return
+	}
+	articleSertion := new(req.ArticleSertion)
+	if err := c.ShouldBindJSON(articleSertion); err != nil {
+		res.Error(c, errcode.ErrInvalidParam)
+		return
+	}
+	if err := service.Svc.ArticleService.UpdateSectionByUuid(uuid, articleSertion); err != nil {
+		res.Error(c, errcode.ErrInternalServer)
+		return
+	}
+	res.Success(c, nil)
+}

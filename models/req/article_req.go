@@ -15,3 +15,8 @@ type ArticleList struct {
 	PageSize int `form:"page_size" binding:"gte=1,lte=20"`
 	PageNum  int `form:"page_num" binding:"gte=1"`
 }
+
+type ArticleSertion struct {
+	Key   string `json:"key" binding:"oneof=top status"` // 用于更新文章状态
+	Value uint8  `json:"value" binding:"oneof=0 1"`
+}

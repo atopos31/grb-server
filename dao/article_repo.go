@@ -12,6 +12,8 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+const tablename = "articles"
+
 type ArticleRepo struct {
 	db    *gorm.DB
 	cache *redis.Client
@@ -107,6 +109,11 @@ func (a *ArticleRepo) UpdateByUuid(newArticle *req.Article, uuid string) (*entit
 	}
 
 	return article, tx.Commit().Error
+}
+
+// 更新文章的某个字段
+func (a *ArticleRepo) UpdateSectionByUuid(uuid string, key string, value any) error {
+	return a.db.Table(tablename).Where("uuid = ?", uuid).Update(key, value).Error
 }
 
 // 更新文章的标签

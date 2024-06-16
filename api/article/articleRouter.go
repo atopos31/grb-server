@@ -11,8 +11,10 @@ func RegisRouter(r *gin.RouterGroup) {
 		articleApi.POST("/create", create)
 		// 获取文章详情
 		articleApi.GET("/get", getByUuid)
-		// 更新文章
+		// 全量更新文章
 		articleApi.PUT("/update/:uuid", update)
+		// 局部更新文章
+		articleApi.PATCH("/update/:uuid", updatesection)
 		// 删除文章
 		articleApi.DELETE("/delete/:uuid", delete)
 	}

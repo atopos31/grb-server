@@ -83,3 +83,7 @@ func (a *ArticleService) Update(newArticle *req.Article, uuid string) (*res.Arti
 
 	return &res.ArticleCreateOrUpdate{Uuid: article.Uuid, Status: article.Status}, nil
 }
+
+func (a *ArticleService) UpdateSectionByUuid(uuid string, section *req.ArticleSertion) error {
+	return a.articleRepo.UpdateSectionByUuid(uuid, section.Key, section.Value)
+}
