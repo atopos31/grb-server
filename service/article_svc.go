@@ -54,8 +54,16 @@ func (a *ArticleService) Create(reqArticle *req.Article) (*res.ArticleCreateOrUp
 	return &res.ArticleCreateOrUpdate{Uuid: article.Uuid, Status: article.Status}, nil
 }
 
-func (a *ArticleService) GetList(reqPage *req.ArticleList) ([]res.Article, error) {
-	return a.articleRepo.GetList(reqPage.PageSize, reqPage.PageNum)
+func (a *ArticleService) GetList(reqPage *req.ArticleList) (*res.ArticleList, error) {
+	list, err := a.articleRepo.GetList(reqPage.PageSize, reqPage.PageNum)
+	if err != nil {
+		return nil, err
+	}
+	count, err := a.articleRepo.GetConut()
+	if err != nil {
+		return nil, err
+	}
+	return &res.ArticleList{Count: count, List: list}, nil
 }
 
 func (a *ArticleService) GetByUuid(uuid string) (*res.Article, error) {

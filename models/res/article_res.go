@@ -28,3 +28,8 @@ type ArticleCreateOrUpdate struct {
 	Uuid   uint32 `json:"uuid"`
 	Status uint8  `json:"status"`
 }
+
+type ArticleList struct {
+	Count int64     `json:"count"`
+	List  []Article `json:"list"`
+}

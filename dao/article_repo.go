@@ -35,6 +35,12 @@ func (a *ArticleRepo) Create(article entity.Article) error {
 	return a.db.Create(&article).Error
 }
 
+func (a *ArticleRepo) GetConut() (int64, error) {
+	var count int64
+	err := a.db.Table(tablename).Where("status = ?", 1).Count(&count).Error
+	return count, err
+}
+
 // GetList 获取文章列表
 func (a *ArticleRepo) GetList(pageSize, pageNum int) ([]res.Article, error) {
 	var articles []res.Article
