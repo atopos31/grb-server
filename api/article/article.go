@@ -56,6 +56,28 @@ func getList(c *gin.Context) {
 	res.Success(c, list)
 }
 
+// @Summary 获取文章列表(管理员)
+// @Description 获取文章列表(管理员)
+// @Tags 文章
+// @Accept json
+// @Produce json
+// @Param data query req.ArticleList true "文章列表"
+// @Success 200 {object} res.Response
+// @Router /article/managelist [get]
+func getManageList(c *gin.Context) {
+	articleList := new(req.ArticleList)
+	if err := c.ShouldBindQuery(articleList); err != nil {
+		res.Error(c, err)
+		return
+	}
+	list, err := service.Svc.ArticleService.GetManageList(articleList)
+	if err != nil {
+		res.Error(c, errcode.ErrInternalServer)
+		return
+	}
+	res.Success(c, list)
+}
+
 // @Summary 获取文章详情
 // @Description 获取文章详情
 // @Tags 文章

@@ -66,6 +66,18 @@ func (a *ArticleService) GetList(reqPage *req.ArticleList) (*res.ArticleList, er
 	return &res.ArticleList{Count: count, List: list}, nil
 }
 
+func (a *ArticleService) GetManageList(reqPage *req.ArticleList) (*res.ArticleList, error) {
+	list, err := a.articleRepo.GetManageList(reqPage.PageSize, reqPage.PageNum)
+	if err != nil {
+		return nil, err
+	}
+	count, err := a.articleRepo.GetManageConut()
+	if err != nil {
+		return nil, err
+	}
+	return &res.ArticleList{Count: count, List: list}, nil
+}
+
 func (a *ArticleService) GetByUuid(uuid string) (*res.Article, error) {
 	return a.articleRepo.GetByUuid(uuid)
 }

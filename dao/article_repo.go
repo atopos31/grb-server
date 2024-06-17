@@ -27,6 +27,10 @@ func (a *ArticleRepo) GetListClumns() []string {
 	return []string{"id", "created_at", "updated_at", "uuid", "title", "summary", "cover_image", "category_id", "views"}
 }
 
+func (a *ArticleRepo) GetManageListClumns() []string {
+	return []string{"id", "created_at", "updated_at", "uuid", "title", "summary", "cover_image", "category_id", "views", "status", "top"}
+}
+
 func (a *ArticleRepo) GetClumns() []string {
 	return []string{"id", "created_at", "updated_at", "uuid", "title", "summary", "content", "cover_image", "category_id", "views", "status", "top"}
 }
@@ -41,6 +45,12 @@ func (a *ArticleRepo) GetConut() (int64, error) {
 	return count, err
 }
 
+func (a *ArticleRepo) GetManageConut() (int64, error) {
+	var count int64
+	err := a.db.Table(tablename).Count(&count).Error
+	return count, err
+}
+
 // GetList 获取文章列表
 func (a *ArticleRepo) GetList(pageSize, pageNum int) ([]res.Article, error) {
 	var articles []res.Article
@@ -50,6 +60,20 @@ func (a *ArticleRepo) GetList(pageSize, pageNum int) ([]res.Article, error) {
 		Offset((pageNum-1)*pageSize).Limit(pageSize).  // 分页
 		Where("status = ?", 1).                        // 状态为1 已发布文章
 		Order("created_at desc").Find(&articles).Error // 排序查询
+	if err != nil {
+		return nil, err
+	}
+	return articles, err
+}
+
+// GetList 获取文章列表
+func (a *ArticleRepo) GetManageList(pageSize, pageNum int) ([]res.Article, error) {
+	var articles []res.Article
+	err := a.db.
+		Preload(clause.Associations).                     // 预加载全部
+		Select(a.GetManageListClumns()).                  // 指定查询字段
+		Offset((pageNum - 1) * pageSize).Limit(pageSize). // 分页
+		Order("created_at desc").Find(&articles).Error    // 排序查询
 	if err != nil {
 		return nil, err
 	}

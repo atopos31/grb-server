@@ -17,5 +17,7 @@ func RegisRouter(r *gin.RouterGroup) {
 		articleApi.PATCH("/update/:uuid", updatesection)
 		// 删除文章
 		articleApi.DELETE("/delete/:uuid", delete)
+		// 获取管理文章列表
+		articleApi.GET("/managelist", getManageList)
 	}
 }
