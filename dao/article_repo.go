@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-const tablename = "articles"
+var model = &entity.Article{}
 
 type ArticleRepo struct {
 	db    *gorm.DB
@@ -41,13 +41,13 @@ func (a *ArticleRepo) Create(article entity.Article) error {
 
 func (a *ArticleRepo) GetConut() (int64, error) {
 	var count int64
-	err := a.db.Table(tablename).Where("status = ?", 1).Count(&count).Error
+	err := a.db.Model(model).Where("status = ?", 1).Count(&count).Error
 	return count, err
 }
 
 func (a *ArticleRepo) GetManageConut() (int64, error) {
 	var count int64
-	err := a.db.Table(tablename).Count(&count).Error
+	err := a.db.Model(model).Count(&count).Error
 	return count, err
 }
 
@@ -143,7 +143,7 @@ func (a *ArticleRepo) UpdateByUuid(newArticle *req.Article, uuid string) (*entit
 
 // 更新文章的某个字段
 func (a *ArticleRepo) UpdateSectionByUuid(uuid string, key string, value any) error {
-	return a.db.Table(tablename).Where("uuid = ?", uuid).Update(key, value).Error
+	return a.db.Model(model).Where("uuid = ?", uuid).Update(key, value).Error
 }
 
 // 更新文章的标签

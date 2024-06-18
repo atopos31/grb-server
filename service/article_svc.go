@@ -2,6 +2,7 @@ package service
 
 import (
 	"gvb/dao"
+	"gvb/global"
 	"gvb/models/entity"
 	"gvb/models/req"
 	"gvb/models/res"
@@ -42,8 +43,9 @@ func (a *ArticleService) Create(reqArticle *req.Article) (*res.ArticleCreateOrUp
 		article.CreatedAt = time.UnixMilli(int64time)
 	}
 	// 默认文章简介
-	if len(article.Content) > 100 {
-		article.Summary = article.Content[:100]
+	if len([]rune(article.Content)) > 100 {
+		article.Summary = string([]rune(article.Content)[:100])
+		global.Log.Info(article.Summary)
 	} else {
 		article.Summary = article.Content
 	}
