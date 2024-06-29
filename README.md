@@ -13,8 +13,8 @@
 使用gorm自动初始化数据库表结构.
 ## 运行
 ```shell
-make dev 
-make pro
+make dev # 开发环境
+make pro # 生产环境
 ```
 ## 接口文档
 
