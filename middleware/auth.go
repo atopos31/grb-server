@@ -32,7 +32,7 @@ func Auth() gin.HandlerFunc {
 			c.Abort()
 		}
 
-		c.Set("user_id", payload.UserID)
+		c.Set("username", payload.Username)
 		return
 	}
 }

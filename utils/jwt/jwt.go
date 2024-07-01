@@ -15,7 +15,8 @@ var (
 
 // Payload is the data of the JSON web token.
 type Payload struct {
-	UserID uint64
+	Username string
+	Password string
 }
 
 // secretFunc validates the secret format.
@@ -41,7 +42,8 @@ func Parse(tokenString string, secret string) (*Payload, error) {
 	// Read the token if it's valid.
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		payloads := &Payload{}
-		payloads.UserID = uint64(claims["user_id"].(float64))
+		payloads.Username = claims["username"].(string)
+		payloads.Password = claims["password"].(string)
 		return payloads, nil
 	}
 
@@ -58,18 +60,13 @@ func Parse(tokenString string, secret string) (*Payload, error) {
 // sub: （Subject）该JWT的主题
 // nbf: （Not Before）不要早于这个时间
 // jti: （JWT ID）用于标识JWT的唯一ID
-func Sign(playload map[string]any) (string, error) {
+func Sign(playload Payload) (string, error) {
 	now := time.Now().Unix()
 	claims := make(jwt.MapClaims)
 	claims["iss"] = global.Conf.Jwt.Issuer
 	claims["iat"] = now
 	claims["exp"] = now + global.Conf.Jwt.Timeout
 	claims["nbf"] = now
-
-	//将自定义需要传入的参数添加到claims中
-	for k, v := range playload {
-		claims[k] = v
-	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(global.Conf.Jwt.Secret))

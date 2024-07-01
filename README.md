@@ -2,9 +2,9 @@
 ## 依赖
 | Environment | Version     |
 | ----------- | ----------- |
-| Golang      | 1.22.2      |
-| Mysql       | 8.0.33      |
-| Redis       | 7.0.12      |\
+| Golang      | 1.22.4      |
+| Mysql       | 8.0.37      |
+| Redis       | 7.0.15      |\
 
 ## 工具
 ### swag用于生成接口文档
@@ -21,7 +21,7 @@ swag init
 ```sql
 CREATE DATABASE databasename DEFAULT CHARACTER SET = 'utf8mb4';
 ```
-在dev/pro.yaml中指定数据库名，运行项目即可利用Gorm自动初始化数据库表结构.
+在dev/pro.yaml中指定``databasename``数据库名，运行项目即可利用Gorm自动初始化数据库表结构.
 ## 运行
 ```shell
 make dev # 开发环境
