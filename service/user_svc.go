@@ -3,6 +3,7 @@ package service
 import (
 	"gvb/dao"
 	"gvb/models/req"
+	"gvb/models/res"
 	"gvb/utils/jwt"
 )
 
@@ -26,4 +27,8 @@ func (u *UserService) Login(user *req.User) (string, error) {
 		Password: user.Password,
 	})
 	return token, err
+}
+
+func (u *UserService) GetInfo() (info *res.UserInfo, err error) {
+	return u.userrepo.GetInfo()
 }

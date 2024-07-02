@@ -7,10 +7,11 @@ import (
 )
 
 var (
-	Success           = NewError(200, "Ok")
-	ErrInternalServer = NewError(500, "Internal server error")
-	ErrInvalidParam   = NewError(400, "Invalid params")
-	ErrAccessDenied   = NewError(401, "Access denied")
+	Success              = NewError(200, "Ok")
+	ErrInternalServer    = NewError(500, "Internal server error")
+	ErrInvalidParam      = NewError(400, "Invalid params")
+	ErrAccessDenied      = NewError(401, "Access denied")
+	ErrPasswordIncorrect = NewError(402, "username or password error")
 )
 
 var (

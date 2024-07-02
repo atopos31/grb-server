@@ -65,8 +65,10 @@ func Sign(playload Payload) (string, error) {
 	claims := make(jwt.MapClaims)
 	claims["iss"] = global.Conf.Jwt.Issuer
 	claims["iat"] = now
-	claims["exp"] = now + global.Conf.Jwt.Timeout
+	claims["exp"] = now + global.Conf.Jwt.Timeout*60*60
 	claims["nbf"] = now
+	claims["username"] = playload.Username
+	claims["password"] = playload.Password
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(global.Conf.Jwt.Secret))

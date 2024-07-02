@@ -16,7 +16,7 @@ import (
 // @Produce json
 // @Param data body req.Article true "文章信息"
 // @Success 200 {object} res.Response
-// @Router /article/create [post]
+// @Router /article/manage/create [post]
 func create(c *gin.Context) {
 	articleReq := new(req.Article)
 
@@ -63,7 +63,7 @@ func getList(c *gin.Context) {
 // @Produce json
 // @Param data query req.ArticleList true "文章列表"
 // @Success 200 {object} res.Response
-// @Router /article/managelist [get]
+// @Router /article/manage/list [get]
 func getManageList(c *gin.Context) {
 	articleList := new(req.ArticleList)
 	if err := c.ShouldBindQuery(articleList); err != nil {
@@ -107,7 +107,7 @@ func getByUuid(c *gin.Context) {
 // @Produce json
 // @Param uuid path string true "文章uuid"
 // @Success 200 {object} res.Response
-// @Router /article/delete/:uuid [delete]
+// @Router /article/manage/delete/:uuid [delete]
 func delete(c *gin.Context) {
 	uuid := c.Param("uuid")
 	if uuid == "" {
@@ -128,7 +128,7 @@ func delete(c *gin.Context) {
 // @Param uuid path string true "文章uuid"
 // @Param article body req.Article true "文章信息"
 // @Success 200 {object} res.Response
-// @Router /article/update/:uuid [put]
+// @Router /article/manage/update/:uuid [put]
 func update(c *gin.Context) {
 	uuid := c.Param("uuid")
 	if uuid == "" {
@@ -156,7 +156,7 @@ func update(c *gin.Context) {
 // @Param uuid path string true "文章uuid"
 // @Param article body req.ArticleSertion true "文章信息"
 // @Success 200 {object} res.Response
-// @Router /article/update/:uuid [patch]
+// @Router /article/manage/update/:uuid [patch]
 func updatesection(c *gin.Context) {
 	uuid := c.Param("uuid")
 	if uuid == "" {

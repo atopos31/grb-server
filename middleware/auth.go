@@ -17,19 +17,21 @@ func Auth() gin.HandlerFunc {
 		if len(header) == 0 {
 			res.Error(c, errcode.ErrAccessDenied)
 			c.Abort()
+			return
 		}
 
 		var token string
 		if _, err := fmt.Sscanf(header, "Bearer %s", &token); err != nil {
 			res.Error(c, errcode.ErrAccessDenied)
 			c.Abort()
+			return
 		}
 
-		// TODO: 验证token
 		payload, err := jwt.Parse(token, global.Conf.Jwt.Secret)
 		if err != nil {
 			res.Error(c, errcode.ErrAccessDenied)
 			c.Abort()
+			return
 		}
 
 		c.Set("username", payload.Username)
