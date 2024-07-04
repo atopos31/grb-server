@@ -6,7 +6,6 @@ import (
 	"gvb/models/entity"
 	"gvb/models/req"
 	"gvb/models/res"
-	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -37,11 +36,7 @@ func (a *ArticleService) Create(reqArticle *req.Article) (*res.ArticleCreateOrUp
 		Status:     reqArticle.Status,
 		Tags:       tags,
 	}
-	//自定义发布时间
-	if reqArticle.CreatedAt != "" {
-		int64time, _ := strconv.ParseInt(reqArticle.CreatedAt, 10, 64)
-		article.CreatedAt = time.UnixMilli(int64time)
-	}
+	article.CreatedAt = time.UnixMilli(reqArticle.CreatedAt)
 	// 默认文章简介
 	if len([]rune(article.Content)) > 100 {
 		article.Summary = string([]rune(article.Content)[:100])
@@ -57,11 +52,11 @@ func (a *ArticleService) Create(reqArticle *req.Article) (*res.ArticleCreateOrUp
 }
 
 func (a *ArticleService) GetList(reqPage *req.ArticleList) (*res.ArticleList, error) {
-	list, err := a.articleRepo.GetList(reqPage.PageSize, reqPage.PageNum)
+	list, err := a.articleRepo.GetListOption(reqPage.PageSize, reqPage.PageNum, false)
 	if err != nil {
 		return nil, err
 	}
-	count, err := a.articleRepo.GetConut()
+	count, err := a.articleRepo.GetConutOption(false)
 	if err != nil {
 		return nil, err
 	}
@@ -69,11 +64,11 @@ func (a *ArticleService) GetList(reqPage *req.ArticleList) (*res.ArticleList, er
 }
 
 func (a *ArticleService) GetManageList(reqPage *req.ArticleList) (*res.ArticleList, error) {
-	list, err := a.articleRepo.GetManageList(reqPage.PageSize, reqPage.PageNum)
+	list, err := a.articleRepo.GetListOption(reqPage.PageSize, reqPage.PageNum, true)
 	if err != nil {
 		return nil, err
 	}
-	count, err := a.articleRepo.GetManageConut()
+	count, err := a.articleRepo.GetConutOption(true)
 	if err != nil {
 		return nil, err
 	}

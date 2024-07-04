@@ -26,6 +26,20 @@ func (c *CateService) GetList() ([]res.Category, error) {
 	return c.cateRepo.GetList()
 }
 
+func (c *CateService) GetManageList() (*res.ManageCategoryList, error) {
+	count, err := c.cateRepo.GetCount()
+	if err != nil {
+		return nil, err
+	}
+
+	list, err := c.cateRepo.GetManageList()
+	if err != nil {
+		return nil, err
+	}
+
+	return &res.ManageCategoryList{Count: count, List: list}, nil
+}
+
 func (c *CateService) Update(reqCate *req.Cate) error {
 	return c.cateRepo.Update(reqCate.Name, reqCate.ID)
 }

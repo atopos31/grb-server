@@ -34,6 +34,31 @@ func (c *CateRepo) GetList() ([]res.Category, error) {
 	return cates, err
 }
 
+func (c *CateRepo) GetManageList() ([]res.ManageCategory, error) {
+	var cates []entity.Category
+	err := c.db.Select("id", "name", "created_at").Preload("Articles").Order("created_at asc").Find(&cates).Error
+	if err != nil {
+		return nil, err
+	}
+	var manageCategories []res.ManageCategory
+	for _, cate := range cates {
+		manageCategories = append(manageCategories, res.ManageCategory{
+			Name:      cate.Name,
+			Count:     len(cate.Articles),
+			ID:        cate.ID,
+			CreatedAt: cate.CreatedAt.UnixMilli(),
+			DeletedAt: cate.DeletedAt,
+		})
+	}
+	return manageCategories, nil
+}
+
+func (c *CateRepo) GetCount() (int64, error) {
+	var count int64
+	err := c.db.Model(&entity.Category{}).Count(&count).Error
+	return count, err
+}
+
 func (c *CateRepo) GetByName(name string) (entity.Category, error) {
 	var cate entity.Category
 	err := c.db.Where("name = ?", name).First(&cate).Error

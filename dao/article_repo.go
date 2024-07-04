@@ -4,7 +4,6 @@ import (
 	"gvb/models/entity"
 	"gvb/models/req"
 	"gvb/models/res"
-	"strconv"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -31,7 +30,7 @@ func (a *ArticleRepo) GetManageListClumns() []string {
 	return []string{"id", "created_at", "updated_at", "uuid", "title", "summary", "cover_image", "category_id", "views", "status", "top"}
 }
 
-func (a *ArticleRepo) GetClumns() []string {
+func (a *ArticleRepo) GetAllClumns() []string {
 	return []string{"id", "created_at", "updated_at", "uuid", "title", "summary", "content", "cover_image", "category_id", "views", "status", "top"}
 }
 
@@ -39,41 +38,26 @@ func (a *ArticleRepo) Create(article entity.Article) error {
 	return a.db.Create(&article).Error
 }
 
-func (a *ArticleRepo) GetConut() (int64, error) {
+func (a *ArticleRepo) GetConutOption(isManage bool) (int64, error) {
 	var count int64
-	err := a.db.Model(model).Where("status = ?", 1).Count(&count).Error
-	return count, err
-}
-
-func (a *ArticleRepo) GetManageConut() (int64, error) {
-	var count int64
-	err := a.db.Model(model).Count(&count).Error
-	return count, err
-}
-
-// GetList 获取文章列表
-func (a *ArticleRepo) GetList(pageSize, pageNum int) ([]res.Article, error) {
-	var articles []res.Article
-	err := a.db.
-		Preload(clause.Associations).                  // 预加载全部
-		Select(a.GetListClumns()).                     // 指定查询字段
-		Offset((pageNum-1)*pageSize).Limit(pageSize).  // 分页
-		Where("status = ?", 1).                        // 状态为1 已发布文章
-		Order("created_at desc").Find(&articles).Error // 排序查询
-	if err != nil {
-		return nil, err
+	query := a.db.Model(model)
+	if !isManage {
+		query = query.Where("status = ?", 1)
 	}
-	return articles, err
+
+	err := query.Count(&count).Error
+	return count, err
 }
 
-// GetList 获取文章列表
-func (a *ArticleRepo) GetManageList(pageSize, pageNum int) ([]res.Article, error) {
+func (a *ArticleRepo) GetListOption(pageSize, pageNum int, isManage bool) ([]res.Article, error) {
 	var articles []res.Article
-	err := a.db.
-		Preload(clause.Associations).                     // 预加载全部
-		Select(a.GetManageListClumns()).                  // 指定查询字段
-		Offset((pageNum - 1) * pageSize).Limit(pageSize). // 分页
-		Order("created_at desc").Find(&articles).Error    // 排序查询
+	query := a.db.Preload(clause.Associations)
+	if isManage {
+		query = query.Select(a.GetManageListClumns())
+	} else {
+		query = query.Select(a.GetListClumns()).Where("status = ?", 1)
+	}
+	err := query.Offset((pageNum - 1) * pageSize).Limit(pageSize).Order("created_at desc").Find(&articles).Error
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +69,7 @@ func (a *ArticleRepo) GetByUuid(uuid string) (*res.Article, error) {
 	article := new(res.Article)
 	err := a.db.
 		Preload(clause.Associations).
-		Select(a.GetClumns()).
+		Select(a.GetAllClumns()).
 		Where("uuid = ?", uuid).First(article).Error
 	if err != nil {
 		return nil, err
@@ -130,8 +114,7 @@ func (a *ArticleRepo) UpdateByUuid(newArticle *req.Article, uuid string) (*entit
 	article.CategoryID = newArticle.CategoryID
 	article.Top = newArticle.Top
 	article.Status = newArticle.Status
-	int64time, _ := strconv.ParseInt(newArticle.CreatedAt, 10, 64)
-	article.CreatedAt = time.UnixMilli(int64time)
+	article.CreatedAt = time.UnixMilli(newArticle.CreatedAt)
 
 	if err := tx.Save(article).Error; err != nil {
 		tx.Rollback()

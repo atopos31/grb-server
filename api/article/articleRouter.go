@@ -16,6 +16,7 @@ func RegisRouter(r *gin.RouterGroup) {
 		articleApi.GET("/get", getByUuid)
 
 		articleManageApi := articleApi.Group("/manage")
+		// 管理员权限
 		articleManageApi.Use(middleware.Auth())
 		{
 			// 创建文章

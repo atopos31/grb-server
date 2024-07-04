@@ -5,9 +5,13 @@ import "github.com/gin-gonic/gin"
 func RegisRouter(r *gin.RouterGroup) {
 	cateApi := r.Group("/category")
 	{
-		cateApi.POST("/create", create)
 		cateApi.GET("/list", getList)
-		cateApi.PUT("/update", update)
-		cateApi.DELETE("/delete/:id", delete)
+		cateManageApi := cateApi.Group("/manage")
+		{
+			cateManageApi.GET("/list", getManageList)
+			cateManageApi.POST("/create", create)
+			cateManageApi.PUT("/update", update)
+			cateManageApi.DELETE("/delete/:id", delete)
+		}
 	}
 }

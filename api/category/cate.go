@@ -15,7 +15,7 @@ import (
 // @Produce json
 // @Param data body req.Cate true "创建分类"
 // @Success 200 {object} res.Response
-// @Router /category/create [post]
+// @Router /category/manage/create [post]
 func create(c *gin.Context) {
 	cateReq := new(req.Cate)
 
@@ -46,12 +46,26 @@ func getList(c *gin.Context) {
 	res.Success(c, cateList)
 }
 
+// @Summary 获取管理分类列表
+// @Tags 分类
+// @Produce json
+// @Success 200 {object} res.Response
+// @Router /category/manage/list [get]
+func getManageList(c *gin.Context) {
+	cateManageList, err := service.Svc.CateService.GetManageList()
+	if err != nil {
+		res.Error(c, err)
+		return
+	}
+	res.Success(c, cateManageList)
+}
+
 // @Summary 更新分类
 // @Tags 分类
 // @Produce json
 // @Param data body req.Cate true "更新分类"
 // @Success 200 {object} res.Response
-// @Router /category/update [put]
+// @Router /category/manage/update [put]
 func update(c *gin.Context) {
 	cateReq := new(req.Cate)
 	if err := c.ShouldBindJSON(cateReq); err != nil {
@@ -70,7 +84,7 @@ func update(c *gin.Context) {
 // @Produce json
 // @Param id formData int true "id"
 // @Success 200 {object} res.Response
-// @Router /category/delete/:id [delete]
+// @Router /category/manage/delete/:id [delete]
 func delete(c *gin.Context) {
 	id := c.Param("id")
 	idint, err := strconv.Atoi(id)
