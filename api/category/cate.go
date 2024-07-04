@@ -52,7 +52,12 @@ func getList(c *gin.Context) {
 // @Success 200 {object} res.Response
 // @Router /category/manage/list [get]
 func getManageList(c *gin.Context) {
-	cateManageList, err := service.Svc.CateService.GetManageList()
+	catelist := new(req.CateList)
+	if err := c.ShouldBindQuery(catelist); err != nil {
+		res.Error(c, err)
+		return
+	}
+	cateManageList, err := service.Svc.CateService.GetManageList(catelist)
 	if err != nil {
 		res.Error(c, err)
 		return

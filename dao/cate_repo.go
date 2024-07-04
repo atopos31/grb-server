@@ -17,7 +17,7 @@ func NewCateRepo(db *gorm.DB) *CateRepo {
 }
 
 func (c *CateRepo) Create(cate entity.Category) (uint, error) {
-	if err := c.db.Create(&cate).Error; err != nil {
+	if err := c.db.Model(&entity.Category{}).Create(&cate).Error; err != nil {
 		if errcode.CheckMysqlErrDataIsExits(err) {
 			return 0, errcode.ErrDataIsExits
 		} else {
@@ -34,9 +34,12 @@ func (c *CateRepo) GetList() ([]res.Category, error) {
 	return cates, err
 }
 
-func (c *CateRepo) GetManageList() ([]res.ManageCategory, error) {
+func (c *CateRepo) GetManageList(pageSize, pageNum int) ([]res.ManageCategory, error) {
 	var cates []entity.Category
-	err := c.db.Select("id", "name", "created_at").Preload("Articles").Order("created_at asc").Find(&cates).Error
+	err := c.db.Select("id", "name", "created_at").
+		Preload("Articles").
+		Offset((pageNum - 1) * pageSize).Limit(pageSize).
+		Order("created_at desc").Find(&cates).Error
 	if err != nil {
 		return nil, err
 	}

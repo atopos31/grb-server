@@ -26,13 +26,13 @@ func (c *CateService) GetList() ([]res.Category, error) {
 	return c.cateRepo.GetList()
 }
 
-func (c *CateService) GetManageList() (*res.ManageCategoryList, error) {
+func (c *CateService) GetManageList(reqpage *req.CateList) (*res.ManageCategoryList, error) {
 	count, err := c.cateRepo.GetCount()
 	if err != nil {
 		return nil, err
 	}
 
-	list, err := c.cateRepo.GetManageList()
+	list, err := c.cateRepo.GetManageList(reqpage.PageSize, reqpage.PageNum)
 	if err != nil {
 		return nil, err
 	}

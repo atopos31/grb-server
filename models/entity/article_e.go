@@ -23,7 +23,7 @@ type Article struct {
 // 文章分类
 type Category struct {
 	gorm.Model
-	Name     string    `gorm:"type:varchar(255);not null;unique"`
+	Name     string    `gorm:"type:varchar(255);not null"`
 	Articles []Article `gorm:"foreignKey:CategoryID"`
 }
 
