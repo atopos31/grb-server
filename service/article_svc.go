@@ -38,8 +38,8 @@ func (a *ArticleService) Create(reqArticle *req.Article) (*res.ArticleCreateOrUp
 	}
 	article.CreatedAt = time.UnixMilli(reqArticle.CreatedAt)
 	// 默认文章简介
-	if len([]rune(article.Content)) > 100 {
-		article.Summary = string([]rune(article.Content)[:100])
+	if len([]rune(article.Content)) > 200 {
+		article.Summary = string([]rune(article.Content)[:200])
 		global.Log.Info(article.Summary)
 	} else {
 		article.Summary = article.Content
@@ -52,11 +52,7 @@ func (a *ArticleService) Create(reqArticle *req.Article) (*res.ArticleCreateOrUp
 }
 
 func (a *ArticleService) GetList(reqPage *req.ArticleList) (*res.ArticleList, error) {
-	list, err := a.articleRepo.GetListOption(reqPage.PageSize, reqPage.PageNum, false)
-	if err != nil {
-		return nil, err
-	}
-	count, err := a.articleRepo.GetConutOption(false)
+	list, count, err := a.articleRepo.GetListOption(reqPage.PageSize, reqPage.PageNum, false, reqPage.TitleLike, reqPage.CategoryID)
 	if err != nil {
 		return nil, err
 	}
@@ -64,11 +60,7 @@ func (a *ArticleService) GetList(reqPage *req.ArticleList) (*res.ArticleList, er
 }
 
 func (a *ArticleService) GetManageList(reqPage *req.ArticleList) (*res.ArticleList, error) {
-	list, err := a.articleRepo.GetListOption(reqPage.PageSize, reqPage.PageNum, true)
-	if err != nil {
-		return nil, err
-	}
-	count, err := a.articleRepo.GetConutOption(true)
+	list, count, err := a.articleRepo.GetListOption(reqPage.PageSize, reqPage.PageNum, true, reqPage.TitleLike, reqPage.CategoryID)
 	if err != nil {
 		return nil, err
 	}

@@ -38,30 +38,32 @@ func (a *ArticleRepo) Create(article entity.Article) error {
 	return a.db.Create(&article).Error
 }
 
-func (a *ArticleRepo) GetConutOption(isManage bool) (int64, error) {
-	var count int64
-	query := a.db.Model(model)
-	if !isManage {
-		query = query.Where("status = ?", 1)
-	}
-
-	err := query.Count(&count).Error
-	return count, err
-}
-
-func (a *ArticleRepo) GetListOption(pageSize, pageNum int, isManage bool) ([]res.Article, error) {
+func (a *ArticleRepo) GetListOption(pageSize, pageNum int, isManage bool, titleLike string, cateID int) ([]res.Article, int64, error) {
 	var articles []res.Article
-	query := a.db.Preload(clause.Associations)
+	var count int64
+	query := a.db.Model(model).Preload(clause.Associations)
 	if isManage {
 		query = query.Select(a.GetManageListClumns())
 	} else {
 		query = query.Select(a.GetListClumns()).Where("status = ?", 1)
 	}
-	err := query.Offset((pageNum - 1) * pageSize).Limit(pageSize).Order("created_at desc").Find(&articles).Error
-	if err != nil {
-		return nil, err
+
+	if titleLike != "" {
+		query = query.Where("title like ?", "%"+titleLike+"%")
 	}
-	return articles, err
+
+	if cateID != 0 {
+		query = query.Where("category_id = ?", cateID)
+	}
+
+	if err := query.Count(&count).Error; err != nil {
+		return nil, 0, err
+	}
+
+	if err := query.Offset((pageNum - 1) * pageSize).Limit(pageSize).Order("created_at desc").Find(&articles).Error; err != nil {
+		return nil, 0, err
+	}
+	return articles, count, nil
 }
 
 // GetByUuid 根据uuid获取文章

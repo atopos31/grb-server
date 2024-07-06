@@ -12,8 +12,10 @@ type Article struct {
 }
 
 type ArticleList struct {
-	PageSize int `form:"page_size" binding:"gte=1,lte=20"`
-	PageNum  int `form:"page_num" binding:"gte=1"`
+	PageSize   int    `form:"page_size" binding:"gte=1,lte=20"`
+	PageNum    int    `form:"page_num" binding:"gte=1"`
+	TitleLike  string `form:"title_like"`
+	CategoryID int    `form:"cate_id"`
 }
 
 type ArticleSertion struct {
