@@ -2,7 +2,6 @@ package service
 
 import (
 	"gvb/dao"
-	"gvb/global"
 	"gvb/models/entity"
 	"gvb/models/req"
 	"gvb/models/res"
@@ -38,9 +37,9 @@ func (a *ArticleService) Create(reqArticle *req.Article) (*res.ArticleCreateOrUp
 	}
 	article.CreatedAt = time.UnixMilli(reqArticle.CreatedAt)
 	// 默认文章简介
-	if len([]rune(article.Content)) > 200 {
-		article.Summary = string([]rune(article.Content)[:200])
-		global.Log.Info(article.Summary)
+	contentRune := []rune(article.Content) // 将文章内容转为rune切片
+	if len(contentRune) > 200 {
+		article.Summary = string(contentRune[:200])
 	} else {
 		article.Summary = article.Content
 	}

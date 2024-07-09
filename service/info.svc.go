@@ -4,7 +4,7 @@ import (
 	"gvb/models/entity"
 	"gvb/models/res"
 	"gvb/site"
-	"io/ioutil"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -82,7 +82,7 @@ func (s *SiteInfoService) GetBadges() []site.Badge {
 }
 
 func loadInfo(filePath string) (*site.SieInfo, error) {
-	file, err := ioutil.ReadFile(filePath)
+	file, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +100,7 @@ func reloadInfo(filePath string, siteInfo site.SieInfo) (*site.SieInfo, error) {
 		return nil, err
 	}
 
-	if err = ioutil.WriteFile(filePath, data, 0644); err != nil {
+	if err = os.WriteFile(filePath, data, 0644); err != nil {
 		return nil, err
 	}
 	return &siteInfo, nil

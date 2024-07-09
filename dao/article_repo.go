@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"fmt"
 	"gvb/models/entity"
 	"gvb/models/req"
 	"gvb/models/res"
@@ -38,6 +39,7 @@ func (a *ArticleRepo) Create(article entity.Article) error {
 	return a.db.Create(&article).Error
 }
 
+// GetListOption 根据条件获取文章列表
 func (a *ArticleRepo) GetListOption(isManage bool, pageSize, pageNum int, titleLike string, cateID int) ([]res.Article, int64, error) {
 	var articles []res.Article
 	var count int64
@@ -49,7 +51,7 @@ func (a *ArticleRepo) GetListOption(isManage bool, pageSize, pageNum int, titleL
 	}
 
 	if titleLike != "" {
-		query = query.Where("title like ?", "%"+titleLike+"%")
+		query = query.Where("title like ?", fmt.Sprintf("%s%s%s", "%", titleLike, "%"))
 	}
 
 	if cateID != 0 {
