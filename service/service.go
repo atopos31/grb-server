@@ -17,8 +17,8 @@ type Service struct {
 	CateService     *CateService
 	TagService      *TagService
 	SiteInfoService *SiteInfoService
-	OssService      inter.OssService // oss接口
-	AiService       inter.AiService  // ai接口
+	OssService      inter.OssService // OSS接口
+	AiService       inter.AiService  // AI接口
 }
 
 func New(db *gorm.DB, cache *redis.Client, ossConfig config.Oss, aiConfig config.Ai, siteInfoPath string) *Service {

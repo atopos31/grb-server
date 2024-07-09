@@ -38,7 +38,7 @@ func (a *ArticleRepo) Create(article entity.Article) error {
 	return a.db.Create(&article).Error
 }
 
-func (a *ArticleRepo) GetListOption(pageSize, pageNum int, isManage bool, titleLike string, cateID int) ([]res.Article, int64, error) {
+func (a *ArticleRepo) GetListOption(isManage bool, pageSize, pageNum int, titleLike string, cateID int) ([]res.Article, int64, error) {
 	var articles []res.Article
 	var count int64
 	query := a.db.Model(model).Preload(clause.Associations)
@@ -60,7 +60,10 @@ func (a *ArticleRepo) GetListOption(pageSize, pageNum int, isManage bool, titleL
 		return nil, 0, err
 	}
 
-	if err := query.Offset((pageNum - 1) * pageSize).Limit(pageSize).Order("created_at desc").Find(&articles).Error; err != nil {
+	if err := query.Offset((pageNum - 1) * pageSize).
+		Limit(pageSize).
+		Order("created_at desc").
+		Find(&articles).Error; err != nil {
 		return nil, 0, err
 	}
 	return articles, count, nil

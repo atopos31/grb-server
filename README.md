@@ -1,4 +1,5 @@
-# 基于Gin + Gorm + Mysql + Redis + Meilisearch的个人博客后端
+# GRB-Backend
+基于Gin + Gorm + Mysql + Redis + Meilisearch的个人博客后端
 ## 依赖
 | Environment | Version     |
 | ----------- | ----------- |

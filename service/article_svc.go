@@ -52,7 +52,7 @@ func (a *ArticleService) Create(reqArticle *req.Article) (*res.ArticleCreateOrUp
 }
 
 func (a *ArticleService) GetList(reqPage *req.ArticleList) (*res.ArticleList, error) {
-	list, count, err := a.articleRepo.GetListOption(reqPage.PageSize, reqPage.PageNum, false, reqPage.TitleLike, reqPage.CategoryID)
+	list, count, err := a.articleRepo.GetListOption(false, reqPage.PageSize, reqPage.PageNum, reqPage.TitleLike, reqPage.CategoryID)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func (a *ArticleService) GetList(reqPage *req.ArticleList) (*res.ArticleList, er
 }
 
 func (a *ArticleService) GetManageList(reqPage *req.ArticleList) (*res.ArticleList, error) {
-	list, count, err := a.articleRepo.GetListOption(reqPage.PageSize, reqPage.PageNum, true, reqPage.TitleLike, reqPage.CategoryID)
+	list, count, err := a.articleRepo.GetListOption(true, reqPage.PageSize, reqPage.PageNum, reqPage.TitleLike, reqPage.CategoryID)
 	if err != nil {
 		return nil, err
 	}
