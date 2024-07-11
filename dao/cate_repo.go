@@ -50,7 +50,6 @@ func (c *CateRepo) GetManageList(pageSize, pageNum int) ([]res.ManageCategory, e
 			Count:     len(cate.Articles),
 			ID:        cate.ID,
 			CreatedAt: cate.CreatedAt.UnixMilli(),
-			DeletedAt: cate.DeletedAt,
 		})
 	}
 	return manageCategories, nil

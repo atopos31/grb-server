@@ -29,6 +29,20 @@ func (t *TagService) GetList() ([]res.Tag, error) {
 	return t.tagRepo.GetList()
 }
 
+func (t *TagService) GetManageList(reqpage *req.TagList) (*res.ManageTagList, error) {
+	count, err := t.tagRepo.GetCount()
+	if err != nil {
+		return nil, err
+	}
+
+	list, err := t.tagRepo.GetManageList(reqpage.PageSize, reqpage.PageNum)
+	if err != nil {
+		return nil, err
+	}
+
+	return &res.ManageTagList{Count: count, List: list}, nil
+}
+
 func (t *TagService) GetHotList(size int) ([]res.Tag, error) {
 	return t.tagRepo.GetHotList(size)
 }

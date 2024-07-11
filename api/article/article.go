@@ -1,6 +1,7 @@
 package article
 
 import (
+	"gvb/global"
 	"gvb/models/errcode"
 	"gvb/models/req"
 	"gvb/models/res"
@@ -141,6 +142,7 @@ func update(c *gin.Context) {
 		res.Error(c, errcode.ErrInvalidParam)
 		return
 	}
+	global.Log.Info(articleReq)
 	resUpdate, err := service.Svc.ArticleService.Update(articleReq, uuid)
 	if err != nil {
 		res.Error(c, errcode.ErrInternalServer)

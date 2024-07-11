@@ -11,12 +11,10 @@ func RegisRouter(r *gin.RouterGroup) {
 	{
 		// 获取文章列表
 		articleApi.GET("/list", getList)
-
 		// 获取文章详情
 		articleApi.GET("/get", getByUuid)
 
 		articleManageApi := articleApi.Group("/manage")
-		// 管理员权限
 		articleManageApi.Use(middleware.Auth())
 		{
 			// 创建文章

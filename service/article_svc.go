@@ -75,6 +75,7 @@ func (a *ArticleService) DeleteByUuid(uuid string) error {
 }
 
 func (a *ArticleService) Update(newArticle *req.Article, uuid string) (*res.ArticleCreateOrUpdate, error) {
+
 	article, err := a.articleRepo.UpdateByUuid(newArticle, uuid)
 	if err != nil {
 		return nil, err

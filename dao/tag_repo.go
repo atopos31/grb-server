@@ -29,7 +29,7 @@ func (t *TagRepo) FirstOrCreateTags(tagnames []string) ([]entity.Tag, error) {
 	tx := t.db.Begin()
 	for _, tagname := range tagnames {
 		tag := entity.Tag{Name: tagname}
-		if err := tx.FirstOrCreate(&tag, tag).Error; err != nil {
+		if err := tx.Model(&entity.Tag{}).FirstOrCreate(&tag, tag).Error; err != nil {
 			tx.Rollback()
 			return nil, err
 		}
@@ -58,6 +58,34 @@ func (t *TagRepo) GetList() ([]res.Tag, error) {
 	}
 
 	return tags, nil
+}
+
+func (t *TagRepo) GetManageList(pageSize, pageNum int) ([]res.ManageTag, error) {
+	var tags []entity.Tag
+	err := t.db.Select("id", "name", "created_at").
+		Preload("Articles").
+		Offset((pageNum - 1) * pageSize).Limit(pageSize).
+		Order("created_at desc").Find(&tags).Error
+	if err != nil {
+		return nil, err
+	}
+	var manageTagList []res.ManageTag
+	for _, tag := range tags {
+		manageTagList = append(manageTagList, res.ManageTag{
+			ID:        tag.ID,
+			Name:      tag.Name,
+			Count:     len(tag.Articles),
+			CreatedAt: tag.CreatedAt.UnixMilli(),
+		})
+	}
+
+	return manageTagList, nil
+}
+
+func (t *TagRepo) GetCount() (int64, error) {
+	var count int64
+	err := t.db.Model(&entity.Tag{}).Count(&count).Error
+	return count, err
 }
 
 // 获取最近常用标签

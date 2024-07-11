@@ -8,7 +8,7 @@ type Article struct {
 	TagNames   []string `json:"tags"`                           // 标签
 	Top        uint8    `json:"top" binding:"oneof=0 1"`        // 是否置顶
 	Status     uint8    `json:"status" binding:"oneof=0 1"`     // 文章状态
-	CreatedAt  int64    `json:"created_at"`                     //发布时间
+	CreatedAt  int64    `json:"created_at"`                     // 发布时间
 }
 
 type ArticleList struct {

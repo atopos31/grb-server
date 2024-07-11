@@ -461,44 +461,6 @@ paths:
       summary: OSS
       tags:
       - OSS
-  /tag/create:
-    post:
-      description: 创建标签
-      parameters:
-      - description: 标签
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/req.Tag'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/res.Response'
-      summary: 创建标签
-      tags:
-      - 标签
-  /tag/delete/:id:
-    delete:
-      parameters:
-      - description: 标签ID
-        in: formData
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/res.Response'
-      summary: 删除标签
-      tags:
-      - 标签
   /tag/hotlist/:size:
     get:
       description: 获取热门标签列表
@@ -533,7 +495,60 @@ paths:
       summary: 获取标签列表
       tags:
       - 标签
-  /tag/update:
+  /tag/manage/create:
+    post:
+      description: 创建标签
+      parameters:
+      - description: 标签
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/req.Tag'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 创建标签
+      tags:
+      - 标签
+  /tag/manage/delete/:id:
+    delete:
+      parameters:
+      - description: 标签ID
+        in: formData
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 删除标签
+      tags:
+      - 标签
+  /tag/manage/list:
+    get:
+      consumes:
+      - application/json
+      description: 获取标签管理列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 获取标签管理列表
+      tags:
+      - 标签
+  /tag/manage/update:
     put:
       consumes:
       - application/json

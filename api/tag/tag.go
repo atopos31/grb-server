@@ -16,7 +16,7 @@ import (
 // @Produce json
 // @Param data body req.Tag true "标签"
 // @Success 200 {object} res.Response
-// @Router /tag/create [post]
+// @Router /tag/manage/create [post]
 func create(c *gin.Context) {
 	tag := new(req.Tag)
 	if err := c.ShouldBindJSON(tag); err != nil {
@@ -45,6 +45,27 @@ func getList(c *gin.Context) {
 		return
 	}
 	res.Success(c, tags)
+}
+
+// @Summary 获取标签管理列表
+// @Description 获取标签管理列表
+// @Tags 标签
+// @Accept json
+// @Produce json
+// @Success 200 {object} res.Response
+// @Router /tag/manage/list [get]
+func getManageList(c *gin.Context) {
+	reqpage := new(req.TagList)
+	if err := c.ShouldBindQuery(reqpage); err != nil {
+		res.Error(c, errcode.ErrInvalidParam)
+		return
+	}
+	list, err := service.Svc.TagService.GetManageList(reqpage)
+	if err != nil {
+		res.Error(c, err)
+		return
+	}
+	res.Success(c, list)
 }
 
 // @Summary 获取热门标签列表
@@ -77,7 +98,7 @@ func getHotList(c *gin.Context) {
 // @Produce json
 // @Param tag body req.Tag true "标签"
 // @Success 200 {object} res.Response
-// @Router /tag/update [put]
+// @Router /tag/manage/update [put]
 func update(c *gin.Context) {
 	tag := new(req.Tag)
 	if err := c.ShouldBindJSON(tag); err != nil {
@@ -96,7 +117,7 @@ func update(c *gin.Context) {
 // @Produce json
 // @Param id formData int true "标签ID"
 // @Success 200 {object} res.Response
-// @Router /tag/delete/:id [delete]
+// @Router /tag/manage/delete/:id [delete]
 func delete(c *gin.Context) {
 	id := c.Param("id")
 	idint, err := strconv.Atoi(id)

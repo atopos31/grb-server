@@ -30,6 +30,6 @@ type Category struct {
 // 文章标签
 type Tag struct {
 	gorm.Model
-	Name     string    `gorm:"type:varchar(255);not null;unique"`
+	Name     string    `gorm:"type:varchar(255);not null"`
 	Articles []Article `gorm:"many2many:articles_tags;"`
 }
