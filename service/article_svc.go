@@ -1,10 +1,13 @@
 package service
 
 import (
+	"fmt"
 	"gvb/dao"
+	"gvb/global"
 	"gvb/models/entity"
 	"gvb/models/req"
 	"gvb/models/res"
+	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -47,6 +50,10 @@ func (a *ArticleService) Create(reqArticle *req.Article) (*res.ArticleCreateOrUp
 	if err := a.articleRepo.Create(article); err != nil {
 		return nil, err
 	}
+
+	// 异步生成文章摘要
+	go a.GenerateSummary(strconv.FormatUint(uint64(article.Uuid), 10), article.Content)
+
 	return &res.ArticleCreateOrUpdate{Uuid: article.Uuid, Status: article.Status}, nil
 }
 
@@ -90,9 +97,25 @@ func (a *ArticleService) Update(newArticle *req.Article, uuid string) (*res.Arti
 		return nil, err
 	}
 
+	// 异步生成文章摘要
+	go a.GenerateSummary(uuid, article.Content)
+
 	return &res.ArticleCreateOrUpdate{Uuid: article.Uuid, Status: article.Status}, nil
 }
 
 func (a *ArticleService) UpdateSectionByUuid(uuid string, section *req.ArticleSertion) error {
 	return a.articleRepo.UpdateSectionByUuid(uuid, section.Key, section.Value)
+}
+
+func (a *ArticleService) GenerateSummary(uuid, content string) {
+	summary, err := Svc.AiService.GetSummary(content)
+	if err != nil {
+		global.Log.Warn(fmt.Sprintf("文章摘要生成失败 err:%v uuid:%s", err, uuid))
+		return
+	}
+
+	if err := a.articleRepo.UpdateSectionByUuid(uuid, "summary", summary); err != nil {
+		global.Log.Warn(fmt.Sprintf("文章摘要更新失败 err:%v uuid:%s", err, uuid))
+		return
+	}
 }

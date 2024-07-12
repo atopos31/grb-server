@@ -47,5 +47,6 @@ ai:
   hunyuan:
     secret_id: 
     secret_key: 
+    model:
 
       

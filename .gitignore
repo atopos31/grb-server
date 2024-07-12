@@ -1,2 +1,6 @@
 .vscode
 config/dev.yaml
+
+test/
+**/test/
+
