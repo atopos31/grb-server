@@ -46,10 +46,12 @@ func NewAiHunyuan(config config.AiHunyuan) *AiHunyuan {
 func (a *AiHunyuan) GetSummary(articleContent string) (string, error) {
 	a.Request.Messages = []*hunyuan.Message{
 		{
+			// 系统角色 提示词设定
 			Role:    common.StringPtr(systemStr),
 			Content: common.StringPtr(systemSummaryContent),
 		},
 		{
+			// 用户角色 文章内容
 			Role:    common.StringPtr(userStr),
 			Content: common.StringPtr(articleContent),
 		},
