@@ -7,6 +7,7 @@ import (
 	"gvb/models/entity"
 	"gvb/models/req"
 	"gvb/models/res"
+	"gvb/models/search"
 	"strconv"
 	"time"
 
@@ -28,7 +29,7 @@ func (a *ArticleService) Create(reqArticle *req.Article) (*res.ArticleCreateOrUp
 		return nil, err
 	}
 
-	article := entity.Article{
+	article := &entity.Article{
 		Title:      reqArticle.Title,
 		Uuid:       uuid.New().ID(), // 随机生成uuid
 		Content:    reqArticle.Content,
@@ -51,8 +52,8 @@ func (a *ArticleService) Create(reqArticle *req.Article) (*res.ArticleCreateOrUp
 		return nil, err
 	}
 
-	// 异步生成文章摘要
 	go a.GenerateSummary(strconv.FormatUint(uint64(article.Uuid), 10), article.Content)
+	go a.articleRepo.AddToSearch(article)
 
 	return &res.ArticleCreateOrUpdate{Uuid: article.Uuid, Status: article.Status}, nil
 }
@@ -97,8 +98,8 @@ func (a *ArticleService) Update(newArticle *req.Article, uuid string) (*res.Arti
 		return nil, err
 	}
 
-	// 异步生成文章摘要
 	go a.GenerateSummary(uuid, article.Content)
+	go a.articleRepo.AddToSearch(article)
 
 	return &res.ArticleCreateOrUpdate{Uuid: article.Uuid, Status: article.Status}, nil
 }
@@ -107,6 +108,11 @@ func (a *ArticleService) UpdateSectionByUuid(uuid string, section *req.ArticleSe
 	return a.articleRepo.UpdateSectionByUuid(uuid, section.Key, section.Value)
 }
 
+func (a *ArticleService) Search(query string) (*search.ArticleSearchResult, error) {
+	return a.articleRepo.GetSearchList(query)
+}
+
+// 生成摘要并加载到搜索引擎
 func (a *ArticleService) GenerateSummary(uuid, content string) {
 	summary, err := Svc.AiService.GetSummary(content)
 	if err != nil {
@@ -116,6 +122,10 @@ func (a *ArticleService) GenerateSummary(uuid, content string) {
 
 	if err := a.articleRepo.UpdateSectionByUuid(uuid, "summary", summary); err != nil {
 		global.Log.Warn(fmt.Sprintf("文章摘要更新失败 err:%v uuid:%s", err, uuid))
+		return
+	}
+	if err := a.articleRepo.UpdateSummarySearch(uuid, summary); err != nil {
+		global.Log.Warn(fmt.Sprintf("文章摘要加载到搜索引擎失败 err:%v uuid:%s", err, uuid))
 		return
 	}
 }

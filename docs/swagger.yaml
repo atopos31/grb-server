@@ -330,6 +330,26 @@ paths:
       summary: 更新文章
       tags:
       - 文章
+  /article/search:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 搜索内容
+        in: query
+        name: query
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 搜索文章
+      tags:
+      - 文章
   /category/list:
     get:
       produces:

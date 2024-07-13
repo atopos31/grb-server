@@ -176,3 +176,24 @@ func updatesection(c *gin.Context) {
 	}
 	res.Success(c, nil)
 }
+
+// @Summary 搜索文章
+// @Tags 文章
+// @Accept json
+// @Produce json
+// @Param query query string true "搜索内容"
+// @Success 200 {object} res.Response
+// @Router /article/search [get]
+func searchByQuery(c *gin.Context) {
+	query := c.Query("query")
+	if query == "" {
+		res.Error(c, errcode.ErrInvalidParam)
+		return
+	}
+	resSearch, err := service.Svc.ArticleService.Search(query)
+	if err != nil {
+		res.Error(c, errcode.ErrInternalServer)
+		return
+	}
+	res.Success(c, resSearch)
+}

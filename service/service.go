@@ -5,6 +5,7 @@ import (
 	"gvb/dao"
 	"gvb/service/inter"
 
+	"github.com/meilisearch/meilisearch-go"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 )
@@ -21,9 +22,9 @@ type Service struct {
 	AiService       inter.AiService  // AI接口
 }
 
-func New(db *gorm.DB, cache *redis.Client, ossConfig config.Oss, aiConfig config.Ai, siteInfoPath string) *Service {
+func New(db *gorm.DB, search *meilisearch.Client, cache *redis.Client, ossConfig config.Oss, aiConfig config.Ai, siteInfoPath string) *Service {
 	userRepo := dao.NewUserRepo(db)
-	articleRepo := dao.NewArticleRepo(db, cache)
+	articleRepo := dao.NewArticleRepo(db, cache, search)
 	tagRepo := dao.NewTagRepo(db)
 	cateRepo := dao.NewCateRepo(db)
 

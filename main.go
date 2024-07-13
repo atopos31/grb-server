@@ -19,10 +19,12 @@ func main() {
 	global.Log = core.InitLogger(global.Conf.Logger)
 	// 初始化数据库
 	db := core.InitGorm(global.Conf.Mysql)
+	// 初始化meilisearch
+	search := core.InitMeiliSearch(global.Conf.Meilisearch)
 	// 初始化redis
 	cache := core.InitRedis(global.Conf.Redis)
 	// service注入
-	service.Svc = service.New(db, cache, global.Conf.Oss, global.Conf.Ai, global.Conf.Sys.SiteInfoPath)
+	service.Svc = service.New(db, search, cache, global.Conf.Oss, global.Conf.Ai, global.Conf.Sys.SiteInfoPath)
 	// 初始化路由
 	router := routers.InitRouter(global.Conf.Sys)
 	// 输出配置

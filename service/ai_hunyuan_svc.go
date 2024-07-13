@@ -19,7 +19,7 @@ const endpointURL = "hunyuan.tencentcloudapi.com"
 const systemStr = "system"
 const userStr = "user"
 
-const systemSummaryContent = "我是博客博主 我会给你一篇文章 以博主为主语 返回我文章摘要即可 字数在300左右"
+const systemSummaryContent = "我是博客博主 我会给你一篇文章 以博主为主语 返回我文章摘要即可 字数在200左右"
 
 func NewAiHunyuan(config config.AiHunyuan) *AiHunyuan {
 	credential := common.NewCredential(

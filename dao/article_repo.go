@@ -1,12 +1,17 @@
 package dao
 
 import (
+	"encoding/json"
 	"fmt"
+	"gvb/global"
 	"gvb/models/entity"
 	"gvb/models/req"
 	"gvb/models/res"
+	"gvb/models/search"
+	"strconv"
 	"time"
 
+	"github.com/meilisearch/meilisearch-go"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -15,12 +20,15 @@ import (
 var model = &entity.Article{}
 
 type ArticleRepo struct {
-	db    *gorm.DB
-	cache *redis.Client
+	db     *gorm.DB
+	cache  *redis.Client
+	search *meilisearch.Client
 }
 
-func NewArticleRepo(db *gorm.DB, cache *redis.Client) *ArticleRepo {
-	return &ArticleRepo{db: db, cache: cache}
+var articleSearchIndex = "articles"
+
+func NewArticleRepo(db *gorm.DB, cache *redis.Client, search *meilisearch.Client) *ArticleRepo {
+	return &ArticleRepo{db: db, cache: cache, search: search}
 }
 
 func (a *ArticleRepo) GetListClumns() []string {
@@ -35,8 +43,8 @@ func (a *ArticleRepo) GetAllClumns() []string {
 	return []string{"id", "created_at", "updated_at", "uuid", "title", "summary", "content", "cover_image", "category_id", "views", "status", "top"}
 }
 
-func (a *ArticleRepo) Create(article entity.Article) error {
-	return a.db.Create(&article).Error
+func (a *ArticleRepo) Create(article *entity.Article) error {
+	return a.db.Create(article).Error
 }
 
 // GetListOption 根据条件获取文章列表
@@ -103,6 +111,13 @@ func (a *ArticleRepo) DeleteByUuid(uuid string) error {
 		return err
 	}
 
+	// 删除文章在搜索引擎中的记录
+	_, err := a.search.Index(articleSearchIndex).DeleteDocument(uuid)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
 	return tx.Commit().Error
 }
 
@@ -110,7 +125,7 @@ func (a *ArticleRepo) DeleteByUuid(uuid string) error {
 func (a *ArticleRepo) UpdateByUuid(newArticle *req.Article, uuid string) (*entity.Article, error) {
 	tx := a.db.Begin()
 	article := new(entity.Article)
-	if err := tx.Where("uuid = ?", uuid).First(&article).Error; err != nil {
+	if err := tx.Where("uuid = ?", uuid).First(article).Error; err != nil {
 		tx.Rollback()
 		return nil, err
 	}
@@ -139,4 +154,73 @@ func (a *ArticleRepo) UpdateSectionByUuid(uuid string, key string, value any) er
 // 更新文章的标签
 func (a *ArticleRepo) UpdateTags(article *entity.Article, tags []entity.Tag) error {
 	return a.db.Model(article).Association("Tags").Replace(tags)
+}
+
+// 添加文章到搜索引擎
+func (a *ArticleRepo) AddToSearch(article *entity.Article) {
+	articleSearch := search.ArticleSearch{
+		Uuid:    article.Uuid,
+		Title:   article.Title,
+		Summary: article.Summary,
+		Content: article.Content,
+	}
+	_, err := a.search.Index(articleSearchIndex).AddDocuments(articleSearch)
+	if err != nil {
+		global.Log.Warn(fmt.Sprintf("文章:%d 插入搜索引擎失败！", articleSearch.Uuid))
+	}
+}
+
+// 更新搜索引擎中文章的摘要
+func (a *ArticleRepo) UpdateSummarySearch(uuid, summary string) (err error) {
+	uuidUint32, err := strconv.ParseUint(uuid, 10, 32)
+	if err != nil {
+		return err
+	}
+	article := map[string]any{
+		"uuid":    uuidUint32,
+		"summary": summary,
+	}
+
+	_, err = a.search.Index(articleSearchIndex).UpdateDocuments(article)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *ArticleRepo) GetSearchList(query string) (*search.ArticleSearchResult, error) {
+	res, err := a.search.Index(articleSearchIndex).Search(query, &meilisearch.SearchRequest{
+		AttributesToCrop:      []string{"title", "content", "summary"},
+		CropLength:            30,
+		AttributesToHighlight: []string{"title", "content", "summary"},
+		HighlightPreTag:       "<span class=\"highlight\">",
+		HighlightPostTag:      "</span>",
+	})
+	if err != nil {
+		return nil, err
+	}
+	
+	byteres, err := json.Marshal(res)
+	var newres search.SearchResponse
+	if err := json.Unmarshal(byteres, &newres); err != nil {
+		global.Log.Warn(err)
+		return nil, err
+	}
+
+	articles := new(search.ArticleSearchResult)
+	for _, hit := range newres.Hits {
+		articles.Hits = append(articles.Hits, search.ArticleSearch{
+			Uuid:    hit.UUID,
+			Title:   hit.Formatted.Title,
+			Summary: hit.Formatted.Summary,
+			Content: hit.Formatted.Content,
+		})
+
+	}
+
+	articles.ProcessingTimeMs = res.ProcessingTimeMs
+	articles.Total = res.EstimatedTotalHits
+
+	return articles, nil
 }
