@@ -189,6 +189,7 @@ func (a *ArticleRepo) UpdateSummarySearch(uuid, summary string) (err error) {
 	return nil
 }
 
+// 搜索文章 搜索引擎实现
 func (a *ArticleRepo) GetSearchList(query string) (*search.ArticleSearchResult, error) {
 	res, err := a.search.Index(articleSearchIndex).Search(query, &meilisearch.SearchRequest{
 		AttributesToCrop:      []string{"title", "content", "summary"},
@@ -196,11 +197,12 @@ func (a *ArticleRepo) GetSearchList(query string) (*search.ArticleSearchResult, 
 		AttributesToHighlight: []string{"title", "content", "summary"},
 		HighlightPreTag:       "<span class=\"highlight\">",
 		HighlightPostTag:      "</span>",
+		MatchingStrategy:      "frequency",
 	})
 	if err != nil {
 		return nil, err
 	}
-	
+
 	byteres, err := json.Marshal(res)
 	var newres search.SearchResponse
 	if err := json.Unmarshal(byteres, &newres); err != nil {
@@ -216,7 +218,6 @@ func (a *ArticleRepo) GetSearchList(query string) (*search.ArticleSearchResult, 
 			Summary: hit.Formatted.Summary,
 			Content: hit.Formatted.Content,
 		})
-
 	}
 
 	articles.ProcessingTimeMs = res.ProcessingTimeMs
