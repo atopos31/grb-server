@@ -6,7 +6,7 @@
 | Golang      | 1.22.4      |
 | Mysql       | 8.0.37      |
 | Redis       | 7.0.15      |
-| [Meilisearch](www.meilisearch.com) | 1.9.0       |
+| [Meilisearch](https://www.meilisearch.com) | 1.9.0       |
 
 ## 工具
 ### swag用于生成接口文档
