@@ -8,7 +8,8 @@ pro:
 	@go mod tidy
 	@swag init
 	@go fmt ./...
-	@go run ./main.go -config ./config/pro.yaml
+	@go build ./main.go
+	@./main.go -config ./config/pro.yaml
 
 fmt:
 	@go fmt ./...
