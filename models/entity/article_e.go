@@ -33,3 +33,9 @@ type Tag struct {
 	Name     string    `gorm:"type:varchar(255);not null"`
 	Articles []Article `gorm:"many2many:articles_tags;"`
 }
+
+// TODO评论表
+type Comment struct {
+	gorm.Model
+	Content string `gorm:"type:text;not null"`
+}

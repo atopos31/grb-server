@@ -26,18 +26,17 @@ func NewAiHunyuan(config config.AiHunyuan) *AiHunyuan {
 		config.SecretId,
 		config.SecretKey,
 	)
-
+	// 实例化一个client
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.Endpoint = endpointURL
-
 	client, err := hunyuan.NewClient(credential, "", cpf)
 	if err != nil {
 		panic(err)
 	}
 
+	// 创建请求对象
 	request := hunyuan.NewChatCompletionsRequest()
 	request.Model = common.StringPtr(config.Model)
-
 	return &AiHunyuan{
 		Client:  client,
 		Request: request,
@@ -46,12 +45,12 @@ func NewAiHunyuan(config config.AiHunyuan) *AiHunyuan {
 func (a *AiHunyuan) GetSummary(articleContent string) (string, error) {
 	a.Request.Messages = []*hunyuan.Message{
 		{
-			// 系统角色 提示词设定
+			// 系统角色 获取文章摘要提示词设定
 			Role:    common.StringPtr(systemStr),
 			Content: common.StringPtr(systemSummaryContent),
 		},
 		{
-			// 用户角色 文章内容
+			// 用户角色 输入文章内容
 			Role:    common.StringPtr(userStr),
 			Content: common.StringPtr(articleContent),
 		},

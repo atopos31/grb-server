@@ -8,7 +8,6 @@ import (
 	"gvb/models/req"
 	"gvb/models/res"
 	"gvb/models/search"
-	"strconv"
 	"time"
 
 	"github.com/meilisearch/meilisearch-go"
@@ -122,7 +121,7 @@ func (a *ArticleRepo) DeleteByUuid(uuid string) error {
 }
 
 // 根据uuid更新文章
-func (a *ArticleRepo) UpdateByUuid(newArticle *req.Article, uuid string) (*entity.Article, error) {
+func (a *ArticleRepo) UpdateByUuid(newArticle *req.Article, uuid uint32) (*entity.Article, error) {
 	tx := a.db.Begin()
 	article := new(entity.Article)
 	if err := tx.Where("uuid = ?", uuid).First(article).Error; err != nil {
@@ -147,7 +146,7 @@ func (a *ArticleRepo) UpdateByUuid(newArticle *req.Article, uuid string) (*entit
 }
 
 // 更新文章的某个字段
-func (a *ArticleRepo) UpdateSectionByUuid(uuid string, key string, value any) error {
+func (a *ArticleRepo) UpdateSectionByUuid(uuid uint32, key string, value any) error {
 	return a.db.Model(model).Where("uuid = ?", uuid).Update(key, value).Error
 }
 
@@ -166,18 +165,15 @@ func (a *ArticleRepo) AddToSearch(article *entity.Article) {
 	}
 	_, err := a.search.Index(articleSearchIndex).AddDocuments(articleSearch)
 	if err != nil {
-		global.Log.Warn(fmt.Sprintf("文章:%d 插入搜索引擎失败！", articleSearch.Uuid))
+		global.Log.Warn(fmt.Sprintf("Article:%d insert to meilisearch err:%v", articleSearch.Uuid, err))
 	}
 }
 
 // 更新搜索引擎中文章的摘要
-func (a *ArticleRepo) UpdateSummarySearch(uuid, summary string) (err error) {
-	uuidUint32, err := strconv.ParseUint(uuid, 10, 32)
-	if err != nil {
-		return err
-	}
+func (a *ArticleRepo) UpdateSummarySearch(uuid uint32, summary string) (err error) {
+
 	article := map[string]any{
-		"uuid":    uuidUint32,
+		"uuid":    uuid,
 		"summary": summary,
 	}
 

@@ -1,12 +1,17 @@
 # GRB-Server
 基于Gin + Gorm + Mysql + Redis + Meilisearch的个人博客后端
 ## 依赖
-| Environment | Version     |
-| ----------- | ----------- |
-| Golang      | 1.22.4      |
-| Mysql       | 8.0.37      |
-| Redis       | 7.0.15      |
-| [Meilisearch](https://www.meilisearch.com) | 1.9.0       |
+| Environment                                | Version |
+| ------------------------------------------ | ------- |
+| Golang                                     | 1.22.4  |
+| Mysql                                      | 8.0.37  |
+| Redis                                      | 7.0.15  |
+| [Meilisearch](https://www.meilisearch.com) | 1.9.0   |
+## 远程依赖
+| Environment | Name           | description          |
+| ----------- | -------------- | -------------------- |
+| Oss         | 七牛云          | 用于博客内图片存储，文件保存    |
+| Ai          | 腾讯混元大模型  | 用于自动生成文件摘要，lite模型可免费使用   |
 
 ## 工具
 ### swag用于生成接口文档

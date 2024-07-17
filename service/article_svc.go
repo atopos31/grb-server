@@ -8,10 +8,7 @@ import (
 	"gvb/models/req"
 	"gvb/models/res"
 	"gvb/models/search"
-	"strconv"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type ArticleService struct {
@@ -23,7 +20,7 @@ func NewArticleService(repo *dao.ArticleRepo, tagRepo *dao.TagRepo) *ArticleServ
 	return &ArticleService{articleRepo: repo, tagRepo: tagRepo}
 }
 
-func (a *ArticleService) Create(reqArticle *req.Article) (*res.ArticleCreateOrUpdate, error) {
+func (a *ArticleService) Create(reqArticle *req.Article, uuid uint32) (*res.ArticleCreateOrUpdate, error) {
 	tags, err := a.tagRepo.FirstOrCreateTags(reqArticle.TagNames)
 	if err != nil {
 		return nil, err
@@ -31,7 +28,7 @@ func (a *ArticleService) Create(reqArticle *req.Article) (*res.ArticleCreateOrUp
 
 	article := &entity.Article{
 		Title:      reqArticle.Title,
-		Uuid:       uuid.New().ID(), // 随机生成uuid
+		Uuid:       uuid,
 		Content:    reqArticle.Content,
 		CoverImage: reqArticle.CoverImage,
 		CategoryID: reqArticle.CategoryID,
@@ -52,7 +49,6 @@ func (a *ArticleService) Create(reqArticle *req.Article) (*res.ArticleCreateOrUp
 		return nil, err
 	}
 
-	go a.GenerateSummary(strconv.FormatUint(uint64(article.Uuid), 10), article.Content)
 	go a.articleRepo.AddToSearch(article)
 
 	return &res.ArticleCreateOrUpdate{Uuid: article.Uuid, Status: article.Status}, nil
@@ -82,8 +78,7 @@ func (a *ArticleService) DeleteByUuid(uuid string) error {
 	return a.articleRepo.DeleteByUuid(uuid)
 }
 
-func (a *ArticleService) Update(newArticle *req.Article, uuid string) (*res.ArticleCreateOrUpdate, error) {
-
+func (a *ArticleService) Update(newArticle *req.Article, uuid uint32) (*res.ArticleCreateOrUpdate, error) {
 	article, err := a.articleRepo.UpdateByUuid(newArticle, uuid)
 	if err != nil {
 		return nil, err
@@ -98,34 +93,35 @@ func (a *ArticleService) Update(newArticle *req.Article, uuid string) (*res.Arti
 		return nil, err
 	}
 
-	go a.GenerateSummary(uuid, article.Content)
 	go a.articleRepo.AddToSearch(article)
 
 	return &res.ArticleCreateOrUpdate{Uuid: article.Uuid, Status: article.Status}, nil
 }
 
-func (a *ArticleService) UpdateSectionByUuid(uuid string, section *req.ArticleSertion) error {
+// 可选字段更新
+func (a *ArticleService) UpdateSectionByUuid(uuid uint32, section *req.ArticleSertion) error {
 	return a.articleRepo.UpdateSectionByUuid(uuid, section.Key, section.Value)
 }
 
+// 从搜索引擎搜索
 func (a *ArticleService) Search(query string) (*search.ArticleSearchResult, error) {
 	return a.articleRepo.GetSearchList(query)
 }
 
 // 生成摘要并加载到搜索引擎
-func (a *ArticleService) GenerateSummary(uuid, content string) {
+func (a *ArticleService) GenerateSummary(uuid uint32, content string) {
 	summary, err := Svc.AiService.GetSummary(content)
 	if err != nil {
-		global.Log.Warn(fmt.Sprintf("文章摘要生成失败 err:%v uuid:%s", err, uuid))
+		global.Log.Warn(fmt.Sprintf("Article generate summary err:%v uuid:%d", err, uuid))
 		return
 	}
 
 	if err := a.articleRepo.UpdateSectionByUuid(uuid, "summary", summary); err != nil {
-		global.Log.Warn(fmt.Sprintf("文章摘要更新失败 err:%v uuid:%s", err, uuid))
+		global.Log.Warn(fmt.Sprintf("Article gpdate summary err:%v uuid:%d", err, uuid))
 		return
 	}
 	if err := a.articleRepo.UpdateSummarySearch(uuid, summary); err != nil {
-		global.Log.Warn(fmt.Sprintf("文章摘要加载到搜索引擎失败 err:%v uuid:%s", err, uuid))
+		global.Log.Warn(fmt.Sprintf("Article update summary to meilisearch  err:%v uuid:%d", err, uuid))
 		return
 	}
 }

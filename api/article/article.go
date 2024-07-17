@@ -1,13 +1,14 @@
 package article
 
 import (
-	"gvb/global"
 	"gvb/models/errcode"
 	"gvb/models/req"
 	"gvb/models/res"
 	"gvb/service"
+	"gvb/utils/conver"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 // @Summary 创建文章
@@ -20,17 +21,20 @@ import (
 // @Router /article/manage/create [post]
 func create(c *gin.Context) {
 	articleReq := new(req.Article)
-
 	if err := c.ShouldBindJSON(articleReq); err != nil {
 		res.Error(c, errcode.ErrInvalidParam)
 		return
 	}
 
-	resCreate, err := service.Svc.ArticleService.Create(articleReq)
+	uuid := uuid.New().ID()
+	resCreate, err := service.Svc.ArticleService.Create(articleReq, uuid)
 	if err != nil {
 		res.Error(c, errcode.ErrInternalServer)
 		return
 	}
+
+	// 异步生成摘要
+	go service.Svc.ArticleService.GenerateSummary(uuid, articleReq.Content)
 
 	res.Success(c, resCreate)
 }
@@ -131,8 +135,14 @@ func delete(c *gin.Context) {
 // @Success 200 {object} res.Response
 // @Router /article/manage/update/:uuid [put]
 func update(c *gin.Context) {
-	uuid := c.Param("uuid")
-	if uuid == "" {
+	uuidStr := c.Param("uuid")
+	if uuidStr == "" {
+		res.Error(c, errcode.ErrInvalidParam)
+		return
+	}
+
+	uuid, err := conver.StrToUint32(uuidStr)
+	if err != nil {
 		res.Error(c, errcode.ErrInvalidParam)
 		return
 	}
@@ -142,12 +152,16 @@ func update(c *gin.Context) {
 		res.Error(c, errcode.ErrInvalidParam)
 		return
 	}
-	global.Log.Info(articleReq)
+
 	resUpdate, err := service.Svc.ArticleService.Update(articleReq, uuid)
 	if err != nil {
 		res.Error(c, errcode.ErrInternalServer)
 		return
 	}
+
+	// 异步生成摘要
+	go service.Svc.ArticleService.GenerateSummary(uuid, articleReq.Content)
+
 	res.Success(c, resUpdate)
 }
 
@@ -160,8 +174,13 @@ func update(c *gin.Context) {
 // @Success 200 {object} res.Response
 // @Router /article/manage/update/:uuid [patch]
 func updatesection(c *gin.Context) {
-	uuid := c.Param("uuid")
-	if uuid == "" {
+	uuidStr := c.Param("uuid")
+	if uuidStr == "" {
+		res.Error(c, errcode.ErrInvalidParam)
+		return
+	}
+	uuid, err := conver.StrToUint32(uuidStr)
+	if err != nil {
 		res.Error(c, errcode.ErrInvalidParam)
 		return
 	}
