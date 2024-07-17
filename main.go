@@ -21,7 +21,7 @@ func main() {
 	service.Svc = service.New(config)
 
 	router := routers.NewRouter(config.Sys)
-	
+
 	if config.Sys.Env == "debug" {
 		global.Log.Infof("[Config]:%v", config)
 	}
