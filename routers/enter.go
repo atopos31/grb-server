@@ -17,7 +17,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func InitRouter(config config.System) *gin.Engine {
+func NewRouter(config config.System) *gin.Engine {
 	gin.SetMode(config.Env)
 	router := gin.Default()
 	// swagger文档

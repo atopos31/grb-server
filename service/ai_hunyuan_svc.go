@@ -22,6 +22,10 @@ const userStr = "user"
 const systemSummaryContent = "我是博客博主 我会给你一篇文章 以博主为主语 返回我文章摘要即可 字数在200左右"
 
 func NewAiHunyuan(config config.AiHunyuan) *AiHunyuan {
+	if config.SecretId == "" || config.SecretKey == "" {
+		panic("ai hunyuan config is empty")
+	}
+
 	credential := common.NewCredential(
 		config.SecretId,
 		config.SecretKey,

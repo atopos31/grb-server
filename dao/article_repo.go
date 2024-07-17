@@ -16,15 +16,15 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-var model = &entity.Article{}
-
 type ArticleRepo struct {
 	db     *gorm.DB
 	cache  *redis.Client
 	search *meilisearch.Client
 }
 
-var articleSearchIndex = "articles"
+var model = &entity.Article{}
+
+const articleSearchIndex = "articles"
 
 func NewArticleRepo(db *gorm.DB, cache *redis.Client, search *meilisearch.Client) *ArticleRepo {
 	return &ArticleRepo{db: db, cache: cache, search: search}

@@ -2,12 +2,9 @@ package service
 
 import (
 	"gvb/config"
+	"gvb/core"
 	"gvb/dao"
 	"gvb/service/inter"
-
-	"github.com/meilisearch/meilisearch-go"
-	"github.com/redis/go-redis/v9"
-	"gorm.io/gorm"
 )
 
 var Svc *Service
@@ -22,15 +19,21 @@ type Service struct {
 	AiService       inter.AiService  // AI接口
 }
 
-func New(db *gorm.DB, search *meilisearch.Client, cache *redis.Client, ossConfig config.Oss, aiConfig config.Ai, siteInfoPath string) *Service {
+func New(config config.Config) *Service {
+	db := core.NewGormDB(config.Mysql)
+	search := core.NewMeiliSearchClient(config.Meilisearch)
+	cache := core.NewRedisCache(config.Redis)
+
 	userRepo := dao.NewUserRepo(db)
 	articleRepo := dao.NewArticleRepo(db, cache, search)
 	tagRepo := dao.NewTagRepo(db)
 	cateRepo := dao.NewCateRepo(db)
 
 	//预留接口 实现可拓展 可选择不同Oss服务注入
-	ossSvc := NewOssQinui(ossConfig.OssQiniu)
-	aiSvc := NewAiHunyuan(aiConfig.Hunyuan)
+	ossSvc := NewOssQinui(config.Oss.OssQiniu)
+	aiSvc := NewAiHunyuan(config.Ai.Hunyuan)
+
+	siteInfoPath := config.Sys.SiteInfoPath
 
 	return &Service{
 		UserService:     NewUserService(userRepo),

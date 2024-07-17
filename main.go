@@ -13,24 +13,17 @@ func main() {
 	// 从命令行读取配置文件位置
 	configDir := flag.String("config", "./config/dev.yaml", "config dir")
 	flag.Parse()
-	// 初始化配置信息
-	global.Conf = core.InitConf(*configDir)
-	// 初始化日志
-	global.Log = core.InitLogger(global.Conf.Logger)
-	// 初始化数据库
-	db := core.InitGorm(global.Conf.Mysql)
-	// 初始化meilisearch
-	search := core.InitMeiliSearch(global.Conf.Meilisearch)
-	// 初始化redis
-	cache := core.InitRedis(global.Conf.Redis)
-	// service注入
-	service.Svc = service.New(db, search, cache, global.Conf.Oss, global.Conf.Ai, global.Conf.Sys.SiteInfoPath)
-	// 初始化路由
-	router := routers.InitRouter(global.Conf.Sys)
-	// 输出配置
-	if global.Conf.Sys.Env == "debug" {
-		global.Log.Infof("[Config]:%v", global.Conf)
-	}
 
-	router.Run(global.Conf.Sys.Addr())
+	config := core.NewConf(*configDir)
+	global.Conf = &config
+	global.Log = core.NewLogger(config.Logger)
+
+	service.Svc = service.New(config)
+
+	router := routers.NewRouter(config.Sys)
+	
+	if config.Sys.Env == "debug" {
+		global.Log.Infof("[Config]:%v", config)
+	}
+	router.Run(config.Sys.Addr())
 }

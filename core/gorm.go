@@ -12,7 +12,7 @@ import (
 )
 
 // 初始化数据库
-func InitGorm(config config.Mysql) *gorm.DB {
+func NewGormDB(config config.Mysql) *gorm.DB {
 	if config.Host == "" || config.Port == "" {
 		panic(errors.New("Mysql config error ,Host or port is NULL!"))
 	}

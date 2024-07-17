@@ -8,7 +8,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-func InitRedis(config config.Redis) *redis.Client {
+func NewRedisCache(config config.Redis) *redis.Client {
 	cache := redis.NewClient(&redis.Options{
 		Addr:     config.Addr(),
 		Password: config.Password,

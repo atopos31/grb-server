@@ -49,6 +49,7 @@ func (a *ArticleService) Create(reqArticle *req.Article, uuid uint32) (*res.Arti
 		return nil, err
 	}
 
+	// 更新文章到搜索
 	go a.articleRepo.AddToSearch(article)
 
 	return &res.ArticleCreateOrUpdate{Uuid: article.Uuid, Status: article.Status}, nil
@@ -93,6 +94,7 @@ func (a *ArticleService) Update(newArticle *req.Article, uuid uint32) (*res.Arti
 		return nil, err
 	}
 
+	// 更新文章到搜索
 	go a.articleRepo.AddToSearch(article)
 
 	return &res.ArticleCreateOrUpdate{Uuid: article.Uuid, Status: article.Status}, nil
