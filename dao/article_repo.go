@@ -171,7 +171,6 @@ func (a *ArticleRepo) AddToSearch(article *entity.Article) {
 
 // 更新搜索引擎中文章的摘要
 func (a *ArticleRepo) UpdateSummarySearch(uuid uint32, summary string) (err error) {
-
 	article := map[string]any{
 		"uuid":    uuid,
 		"summary": summary,

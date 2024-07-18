@@ -15,7 +15,7 @@
 
 ## 工具
 ### swag用于生成接口文档
-```
+```shell
 go install github.com/swaggo/swag/cmd/swag@latest
 swag init
 ```

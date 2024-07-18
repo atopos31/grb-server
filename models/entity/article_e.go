@@ -34,16 +34,16 @@ type Tag struct {
 	Articles []Article `gorm:"many2many:articles_tags;"`
 }
 
-// TODO评论表
+// 评论表
 type Comment struct {
 	gorm.Model
-	ArticleID uint     `gorm:"not null;index;comment:所属文章ID" `
-	Article   Article  `gorm:"foreignKey:ArticleID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	UserName  string   `gorm:"not null;size:255;comment:评论用户名"`
-	Email     string   `gorm:"not null;size:255;comment:评论邮箱"`
-	Avatar    string   `gorm:"not null;size:255;comment:评论头像"`
-	RootID    *int     `gorm:"index;default:NULL;comment:根评论ID，为NULL说明是一级评论"`
-	ParentID  *int     `gorm:"index;default:NULL;comment:父评论ID，在RootID不为NULL的情况下，为NULL说明是二级评论，不为NUll说明是二级评论的回复评论"`
-	Parent    *Comment `gorm:"foreignKey:ParentID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	Content   string   `gorm:"not null;size:1024;comment:评论内容"`
+	ArticleUuid uint32   `gorm:"not null;index;comment:所属文章ID" `
+	Article     Article  `gorm:"foreignKey:ArticleUuid;references:Uuid;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	UserName    string   `gorm:"not null;size:255;comment:评论用户名"`
+	Email       string   `gorm:"not null;size:255;comment:评论邮箱"`
+	Avatar      string   `gorm:"not null;size:255;comment:评论头像"`
+	RootID      *int     `gorm:"index;default:NULL;comment:根评论ID，为NULL说明是一级评论"`
+	ParentID    *int     `gorm:"index;default:NULL;comment:父评论ID，在RootID不为NULL的情况下，为NULL说明是二级评论，不为NUll说明是二级评论的回复评论"`
+	Parent      *Comment `gorm:"foreignKey:ParentID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Content     string   `gorm:"not null;size:1024;comment:评论内容"`
 }
