@@ -14,7 +14,7 @@ import (
 // @Tags 分类
 // @Produce json
 // @Param data body req.Cate true "创建分类"
-// @Success 200 {object} res.Response
+// @Success 200 {object} res.Response{data=int}
 // @Router /category/manage/create [post]
 func create(c *gin.Context) {
 	cateReq := new(req.Cate)

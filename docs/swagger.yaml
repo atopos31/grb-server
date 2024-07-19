@@ -59,6 +59,26 @@ definitions:
     required:
     - name
     type: object
+  req.Comment:
+    properties:
+      article_id:
+        type: integer
+      content:
+        type: string
+      email:
+        type: string
+      parent_id:
+        type: integer
+      root_id:
+        type: integer
+      user_name:
+        type: string
+    required:
+    - article_id
+    - content
+    - email
+    - user_name
+    type: object
   req.Tag:
     properties:
       id:
@@ -86,6 +106,43 @@ definitions:
         type: array
       user:
         $ref: '#/definitions/site.User'
+    type: object
+  res.ChildComment:
+    properties:
+      avatar:
+        type: string
+      content:
+        type: string
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      parentId:
+        description: 父评论ID 为空为二级评论 不为空为二级评论的回复
+        type: integer
+      userName:
+        type: string
+    type: object
+  res.Comment:
+    properties:
+      avatar:
+        type: string
+      childComment:
+        items:
+          $ref: '#/definitions/res.ChildComment'
+        type: array
+      content:
+        type: string
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      userName:
+        type: string
     type: object
   res.OssConfig:
     properties:
@@ -377,7 +434,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/res.Response'
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  type: integer
+              type: object
       summary: 创建分类
       tags:
       - 分类
@@ -430,6 +492,62 @@ paths:
       summary: 更新分类
       tags:
       - 分类
+  /comment/create:
+    post:
+      consumes:
+      - application/json
+      description: 创建评论
+      parameters:
+      - description: 评论
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/req.Comment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/res.Response'
+              type: object
+      summary: 创建评论
+      tags:
+      - 评论
+  /comment/list/:uuid:
+    get:
+      consumes:
+      - application/json
+      description: 获取评论列表
+      parameters:
+      - description: 评论
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/req.Comment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/res.Comment'
+                  type: array
+              type: object
+      summary: 获取评论列表
+      tags:
+      - 评论
   /info/badges:
     get:
       produces:

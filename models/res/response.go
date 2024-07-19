@@ -2,11 +2,14 @@ package res
 
 import (
 	"net/http"
+	"time"
 
 	"gvb/models/errcode"
 
 	"github.com/gin-gonic/gin"
 )
+
+type LocalTime time.Time
 
 type Response struct {
 	Code    int    `json:"code"`

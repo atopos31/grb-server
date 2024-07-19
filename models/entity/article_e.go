@@ -42,8 +42,9 @@ type Comment struct {
 	UserName    string   `gorm:"not null;size:255;comment:评论用户名"`
 	Email       string   `gorm:"not null;size:255;comment:评论邮箱"`
 	Avatar      string   `gorm:"not null;size:255;comment:评论头像"`
-	RootID      *int     `gorm:"index;default:NULL;comment:根评论ID，为NULL说明是一级评论"`
-	ParentID    *int     `gorm:"index;default:NULL;comment:父评论ID，在RootID不为NULL的情况下，为NULL说明是二级评论，不为NUll说明是二级评论的回复评论"`
+	RootID      *uint    `gorm:"index;default:NULL;comment:根评论ID，为NULL说明是一级评论"`
+	ParentID    *uint    `gorm:"index;default:NULL;comment:父评论ID，在RootID不为NULL的情况下，为NULL说明是二级评论，不为NUll说明是二级评论的回复评论"`
+	Root        *Comment `gorm:"foreignKey:RootID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Parent      *Comment `gorm:"foreignKey:ParentID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Content     string   `gorm:"not null;size:1024;comment:评论内容"`
 }

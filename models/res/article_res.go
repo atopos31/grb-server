@@ -7,8 +7,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type LocalTime time.Time
-
 type Article struct {
 	ID         uint           `gorm:"primarykey" json:"id"`
 	CreatedAt  LocalTime      `json:"created_at"`
