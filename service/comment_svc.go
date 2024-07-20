@@ -19,8 +19,9 @@ func NewCommentService(commentRepo *dao.CommentRepo) *CommentService {
 	}
 }
 
-const gravatarCN_URl = "https://cravatar.cn/avatar/"
-const gravatarCOM_URl = "https://gravatar.com/avatar/"
+// 头像地址
+const cravatarURl = "https://cravatar.cn/avatar/"
+const gravatarURl = "https://gravatar.com/avatar/"
 
 func (c *CommentService) Create(reqComment *req.Comment) error {
 	emailMD5 := conver.StringToMD5(reqComment.Email)
@@ -28,8 +29,9 @@ func (c *CommentService) Create(reqComment *req.Comment) error {
 	comment := &entity.Comment{
 		ArticleUuid: reqComment.ArticleID,
 		UserName:    reqComment.UserName,
-		Avatar:      fmt.Sprintf("%s%s", gravatarCN_URl, emailMD5),
+		Avatar:      fmt.Sprintf("%s%s", cravatarURl, emailMD5),
 		Email:       reqComment.Email,
+		WebSite:     reqComment.WebSite,
 		Content:     reqComment.Content,
 		ParentID:    reqComment.ParentID,
 		RootID:      reqComment.RootID,

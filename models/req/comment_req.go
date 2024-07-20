@@ -7,4 +7,5 @@ type Comment struct {
 	RootID    *uint  `json:"root_id"`
 	UserName  string `json:"user_name" binding:"required"`
 	Email     string `json:"email" binding:"required,email"`
+	WebSite   string `json:"web_site"`
 }

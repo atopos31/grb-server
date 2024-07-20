@@ -961,6 +961,9 @@ const docTemplate = `{
                 },
                 "user_name": {
                     "type": "string"
+                },
+                "web_site": {
+                    "type": "string"
                 }
             }
         },
@@ -1031,6 +1034,9 @@ const docTemplate = `{
                 },
                 "userName": {
                     "type": "string"
+                },
+                "web_site": {
+                    "type": "string"
                 }
             }
         },
@@ -1059,6 +1065,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "userName": {
+                    "type": "string"
+                },
+                "web_site": {
                     "type": "string"
                 }
             }

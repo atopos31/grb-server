@@ -73,6 +73,8 @@ definitions:
         type: integer
       user_name:
         type: string
+      web_site:
+        type: string
     required:
     - article_id
     - content
@@ -124,6 +126,8 @@ definitions:
         type: integer
       userName:
         type: string
+      web_site:
+        type: string
     type: object
   res.Comment:
     properties:
@@ -142,6 +146,8 @@ definitions:
       id:
         type: integer
       userName:
+        type: string
+      web_site:
         type: string
     type: object
   res.OssConfig:

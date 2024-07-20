@@ -950,6 +950,9 @@
                 },
                 "user_name": {
                     "type": "string"
+                },
+                "web_site": {
+                    "type": "string"
                 }
             }
         },
@@ -1020,6 +1023,9 @@
                 },
                 "userName": {
                     "type": "string"
+                },
+                "web_site": {
+                    "type": "string"
                 }
             }
         },
@@ -1048,6 +1054,9 @@
                     "type": "integer"
                 },
                 "userName": {
+                    "type": "string"
+                },
+                "web_site": {
                     "type": "string"
                 }
             }
