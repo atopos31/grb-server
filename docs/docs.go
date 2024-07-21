@@ -1046,7 +1046,7 @@ const docTemplate = `{
                 "avatar": {
                     "type": "string"
                 },
-                "childComment": {
+                "child_comment": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/res.ChildComment"

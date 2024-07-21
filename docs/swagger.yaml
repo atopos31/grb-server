@@ -133,7 +133,7 @@ definitions:
     properties:
       avatar:
         type: string
-      childComment:
+      child_comment:
         items:
           $ref: '#/definitions/res.ChildComment'
         type: array

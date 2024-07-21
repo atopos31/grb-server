@@ -21,7 +21,7 @@ import (
 func create(c *gin.Context) {
 	commentReq := new(req.Comment)
 	if err := c.ShouldBindJSON(commentReq); err != nil {
-		res.Error(c, err)
+		res.Error(c, errcode.ErrInvalidParam)
 		return
 	}
 	if err := service.Svc.CommentService.Create(commentReq); err != nil {

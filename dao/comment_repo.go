@@ -21,7 +21,7 @@ func (c *CommentRepo) Create(comment *entity.Comment) error {
 
 func (c *CommentRepo) GetList(uuid uint32) ([]*res.Comment, error) {
 	var rootComments []*res.Comment
-	if err := c.db.Model(&entity.Comment{}).Where("article_uuid = ?", uuid).Where("root_id is null").Find(&rootComments).Error; err != nil {
+	if err := c.db.Model(&entity.Comment{}).Where("article_uuid = ?", uuid).Where("root_id is null").Order("created_at desc").Find(&rootComments).Error; err != nil {
 		return nil, err
 	}
 

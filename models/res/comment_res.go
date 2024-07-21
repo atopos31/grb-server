@@ -11,7 +11,7 @@ type Comment struct {
 	WebSite  string `json:"web_site"`
 
 	CreatedAt    LocalTime      `json:"createdAt"`
-	ChildComment []ChildComment `gorm:"-" json:"childComment"`
+	ChildComment []ChildComment `gorm:"-" json:"child_comment"`
 	DeletedAt    gorm.DeletedAt `gorm:"index" json:"-"` //用来避免查询到软删除的数据
 }
 
