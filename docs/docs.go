@@ -1032,6 +1032,9 @@ const docTemplate = `{
                     "description": "父评论ID 为空为二级评论 不为空为二级评论的回复",
                     "type": "integer"
                 },
+                "rootId": {
+                    "type": "integer"
+                },
                 "userName": {
                     "type": "string"
                 },

@@ -201,7 +201,6 @@ func (a *ArticleRepo) GetSearchList(query string) (*search.ArticleSearchResult, 
 	byteres, err := json.Marshal(res)
 	var newres search.SearchResponse
 	if err := json.Unmarshal(byteres, &newres); err != nil {
-		global.Log.Warn(err)
 		return nil, err
 	}
 
