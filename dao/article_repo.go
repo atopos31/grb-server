@@ -111,8 +111,7 @@ func (a *ArticleRepo) DeleteByUuid(uuid string) error {
 	}
 
 	// 删除文章在搜索引擎中的记录
-	_, err := a.search.Index(articleSearchIndex).DeleteDocument(uuid)
-	if err != nil {
+	if err := a.DeleteSearch(uuid);err != nil {
 		tx.Rollback()
 		return err
 	}
@@ -167,6 +166,15 @@ func (a *ArticleRepo) AddToSearch(article *entity.Article) {
 	if err != nil {
 		global.Log.Warn(fmt.Sprintf("Article:%d insert to meilisearch err:%v", articleSearch.Uuid, err))
 	}
+}
+
+// 删除文章在搜索引擎中的记录
+func (a *ArticleRepo) DeleteSearch(uuid string) error {
+	_, err := a.search.Index(articleSearchIndex).DeleteDocument(uuid)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // 更新搜索引擎中文章的摘要

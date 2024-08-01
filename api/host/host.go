@@ -49,7 +49,7 @@ func sseHost(c *gin.Context) step {
 
 func loadCPUperent(wg *sync.WaitGroup, percent *int, interval time.Duration) {
 	defer wg.Done()
-	totalPercent, _ := cpu.Percent(interval, false)
+	totalPercent, _ := cpu.Percent(interval, true)
 	*percent = int(totalPercent[0])
 	return
 }

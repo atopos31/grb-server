@@ -37,7 +37,7 @@ type Tag struct {
 // 评论表
 type Comment struct {
 	gorm.Model
-	ArticleUuid uint32   `gorm:"not null;index;comment:所属文章ID" `
+	ArticleUuid uint32   `gorm:"not null;index;comment:所属文章ID"`
 	Article     Article  `gorm:"foreignKey:ArticleUuid;references:Uuid;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	UserName    string   `gorm:"not null;size:255;comment:评论用户名"`
 	Email       string   `gorm:"not null;size:255;comment:评论邮箱"`
