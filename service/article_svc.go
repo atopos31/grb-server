@@ -110,7 +110,7 @@ func (a *ArticleService) Search(query string) (*search.ArticleSearchResult, erro
 	return a.articleRepo.GetSearchList(query)
 }
 
-// 生成摘要并加载到搜索引擎
+// 生成摘要并加载到数据库和搜索引擎
 func (a *ArticleService) GenerateSummary(uuid uint32, content string) {
 	summary, err := Svc.AiService.GetSummary(content)
 	if err != nil {

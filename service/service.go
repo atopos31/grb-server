@@ -4,6 +4,7 @@ import (
 	"gvb/config"
 	"gvb/core"
 	"gvb/dao"
+	"gvb/global"
 	"gvb/service/inter"
 )
 
@@ -33,7 +34,7 @@ func New(config config.Config) *Service {
 
 	//预留接口 实现可拓展 可选择不同Oss服务注入
 	ossSvc := NewOssQinui(config.Oss.OssQiniu)
-	aiSvc := NewAiHunyuan(config.Ai.Hunyuan)
+	aiSvc := NewAiSvcByConfig(config.Ai)
 
 	siteInfoPath := config.Sys.SiteInfoPath
 
@@ -46,5 +47,17 @@ func New(config config.Config) *Service {
 		SiteInfoService: NewSiteInfoService(db, cache, siteInfoPath),
 		OssService:      ossSvc,
 		AiService:       aiSvc,
+	}
+}
+
+func NewAiSvcByConfig(config config.Ai) inter.AiService {
+	switch config.Use {
+	case "hunyuan":
+		return NewAiHunyuan(config.Hunyuan)
+	case "qianfan":
+		return NewAiQianfan(config.Qianfan)
+	default:
+		global.Log.Error("AI service create failed")
+		return nil
 	}
 }
