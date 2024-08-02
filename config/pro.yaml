@@ -44,9 +44,14 @@ oss:
     expire: 3600 # 签名过期时间
 
 ai:
+  use:  # 选择AI hunyuan/qianfan
   hunyuan:
     secret_id: 
     secret_key: 
-    model:
+    model: hunyuan-lite # 模型名称 hunyuan-lite为免费使用 详见 https://cloud.tencent.com/document/product/1729/104753
+  qianfan:
+    access_key: 
+    secret_key: 
+    model: ERNIE-Speed-128K # 模型名称 ERNIE-Speed-128K为免费使用 详见 https://cloud.baidu.com/doc/WENXINWORKSHOP/s/6ltgkzya5
 
       

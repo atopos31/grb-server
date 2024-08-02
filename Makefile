@@ -3,7 +3,7 @@ dev: init
 
 pro: init
 	@go build ./main.go
-	@./main.go -config ./config/pro.yaml
+	@./main -config ./config/pro.yaml
 
 init:
 	@go mod tidy
