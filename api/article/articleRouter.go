@@ -16,6 +16,7 @@ func RegisRouter(r *gin.RouterGroup) {
 		// 基于搜索引擎搜索
 		articleApi.GET("/search", searchByQuery)
 
+		//后台接口
 		articleManageApi := articleApi.Group("/manage")
 		articleManageApi.Use(middleware.Auth())
 		{
