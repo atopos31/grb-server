@@ -5,7 +5,7 @@ pro: init
 	@go build ./main.go
 	@./main -config ./config/pro.yaml
 
-init:
+init: fmt
 	@go mod tidy
 	@swag init
 

@@ -25,7 +25,7 @@ func NewAiQianfan(config config.AiQianfan) *AiQianfan {
 	return &AiQianfan{chat: chat}
 }
 
-func (a *AiQianfan) GetSummary(articleContent string) (string, error) { 
+func (a *AiQianfan) GetSummary(articleContent string) (string, error) {
 	resp, err := a.chat.Do(
 		context.TODO(),
 		&qianfan.ChatCompletionRequest{

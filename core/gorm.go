@@ -9,6 +9,7 @@ import (
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 // 初始化数据库
@@ -18,10 +19,13 @@ func NewGormDB(config config.Mysql) *gorm.DB {
 	}
 
 	dsn := config.Dsn()
-	mysqllogger := config.Logger()
+
+	logger := logger.Default
+	loggerMode := configLevelToMode(config.LogLevel)
+	logger.LogMode(loggerMode)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
-		Logger: mysqllogger,
+		Logger: logger,
 	})
 	if err != nil {
 		panic(err)
@@ -36,4 +40,17 @@ func NewGormDB(config config.Mysql) *gorm.DB {
 	entity.InitEntity(db)
 
 	return db
+}
+
+func configLevelToMode(logLevel string) logger.LogLevel {
+	switch logLevel {
+	case config.ENV_GORM_ERROR:
+		return logger.Error
+	case config.ENV_GORM_WORN:
+		return logger.Warn
+	case config.ENV_GORM_INFO:
+		return logger.Info
+	default:
+		return logger.Info
+	}
 }

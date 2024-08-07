@@ -111,8 +111,7 @@ func (a *ArticleRepo) DeleteByUuid(uuid string) error {
 	}
 
 	// 删除文章在搜索引擎中的记录
-	if err := a.DeleteSearch(uuid);err != nil {
-		tx.Rollback()
+	if err := a.DeleteSearch(uuid); err != nil {
 		return err
 	}
 

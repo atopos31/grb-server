@@ -2,14 +2,14 @@ package res
 
 type Host struct {
 	CpuPrecent int `json:"cpuPrecent"`
-	Mem        Mem     `json:"mem"`
-	Net        Net     `json:"net"`
+	Mem        Mem `json:"mem"`
+	Net        Net `json:"net"`
 }
 
 type Mem struct {
-	Total       uint64  `json:"total"` // 单位 b 下同
-	Used        uint64  `json:"used"`
-	UsedPercent int `json:"usedPercent"`
+	Total       uint64 `json:"total"` // 单位 b 下同
+	Used        uint64 `json:"used"`
+	UsedPercent int    `json:"usedPercent"`
 }
 
 type Net struct {

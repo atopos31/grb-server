@@ -1,6 +1,14 @@
 package config
 
-import "gorm.io/gorm/logger"
+import (
+	"fmt"
+)
+
+const (
+	ENV_GORM_INFO  = "info"
+	ENV_GORM_ERROR = "error"
+	ENV_GORM_WORN  = "warn"
+)
 
 type Mysql struct {
 	Host     string `mapstructure:"host"`
@@ -14,19 +22,5 @@ type Mysql struct {
 
 // Dsn mysql dsn
 func (m *Mysql) Dsn() string {
-	return m.User + ":" + m.Password + "@tcp(" + m.Host + ":" + m.Port + ")/" + m.Database + "?" + m.Config
-}
-
-// Logger mysql logger
-func (m *Mysql) Logger() logger.Interface {
-	var mysqllogger logger.Interface
-	if m.LogLevel == "info" {
-		mysqllogger = logger.Default.LogMode(logger.Info)
-	} else if m.LogLevel == "error" {
-		mysqllogger = logger.Default.LogMode(logger.Error)
-	} else if m.LogLevel == "warn" {
-		mysqllogger = logger.Default.LogMode(logger.Warn)
-	}
-
-	return mysqllogger
+	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?%s", m.User, m.Password, m.Host, m.Port, m.Database, m.Config)
 }

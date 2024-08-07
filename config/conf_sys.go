@@ -1,5 +1,13 @@
 package config
 
+import "fmt"
+
+const (
+	ENV_SYS_DEBUG   = "debug"
+	ENV_SYS_RELEASE = "release"
+	ENV_SYS_TEST    = "test"
+)
+
 type System struct {
 	Host         string `mapstructure:"host"`
 	Port         string `mapstructure:"port"`
@@ -10,5 +18,5 @@ type System struct {
 
 // 获取监听地址
 func (s *System) Addr() string {
-	return s.Host + ":" + s.Port
+	return fmt.Sprintf("%s:%s", s.Host, s.Port)
 }

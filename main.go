@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 
+	"gvb/config"
 	"gvb/core"
 	"gvb/global"
 	"gvb/routers"
@@ -14,16 +15,17 @@ func main() {
 	configDir := flag.String("config", "./config/dev.yaml", "config dir")
 	flag.Parse()
 
-	config := core.NewConf(*configDir)
-	global.Conf = &config
-	global.Log = core.NewLogger(config.Logger)
+	conf := core.NewConf(*configDir)
 
-	service.Svc = service.New(config)
+	global.Conf = &conf
+	global.Log = core.NewLogger(conf.Logger)
 
-	router := routers.NewRouter(config.Sys)
+	service.Svc = service.New(conf)
 
-	if config.Sys.Env == "debug" {
-		global.Log.Infof("[Config]:%v", config)
+	server := routers.New(conf.Sys)
+
+	if conf.Sys.Env == config.ENV_SYS_DEBUG {
+		global.Log.Infof("[Config]:%v", conf)
 	}
-	router.Run(config.Sys.Addr())
+	server.Run(conf.Sys.Addr())
 }

@@ -1,5 +1,7 @@
 package config
 
+import "fmt"
+
 type Redis struct {
 	Host     string `mapstructure:"host"`
 	Port     string `mapstructure:"port"`
@@ -8,5 +10,5 @@ type Redis struct {
 }
 
 func (r *Redis) Addr() string {
-	return r.Host + ":" + r.Port
+	return fmt.Sprintf("%s:%s", r.Host, r.Port)
 }
