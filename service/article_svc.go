@@ -2,8 +2,8 @@ package service
 
 import (
 	"fmt"
+	"gvb/app"
 	"gvb/dao"
-	"gvb/global"
 	"gvb/models/entity"
 	"gvb/models/req"
 	"gvb/models/res"
@@ -114,16 +114,16 @@ func (a *ArticleService) Search(query string) (*search.ArticleSearchResult, erro
 func (a *ArticleService) GenerateSummary(uuid uint32, content string) {
 	summary, err := Svc.AiService.GetSummary(content)
 	if err != nil {
-		global.Log.Warn(fmt.Sprintf("Article generate summary err:%v uuid:%d", err, uuid))
+		app.Log.Warn(fmt.Sprintf("Article generate summary err:%v uuid:%d", err, uuid))
 		return
 	}
 
 	if err := a.articleRepo.UpdateSectionByUuid(uuid, "summary", summary); err != nil {
-		global.Log.Warn(fmt.Sprintf("Article gpdate summary err:%v uuid:%d", err, uuid))
+		app.Log.Warn(fmt.Sprintf("Article gpdate summary err:%v uuid:%d", err, uuid))
 		return
 	}
 	if err := a.articleRepo.UpdateSummarySearch(uuid, summary); err != nil {
-		global.Log.Warn(fmt.Sprintf("Article update summary to meilisearch  err:%v uuid:%d", err, uuid))
+		app.Log.Warn(fmt.Sprintf("Article update summary to meilisearch  err:%v uuid:%d", err, uuid))
 		return
 	}
 }

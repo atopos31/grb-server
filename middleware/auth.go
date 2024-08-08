@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"fmt"
-	"gvb/global"
+	"gvb/app"
 	"gvb/models/errcode"
 	"gvb/models/res"
 	"gvb/utils/jwt"
@@ -27,7 +27,7 @@ func Auth() gin.HandlerFunc {
 			return
 		}
 
-		payload, err := jwt.Parse(token, global.Conf.Jwt.Secret)
+		payload, err := jwt.Parse(token, app.Conf.Jwt.Secret)
 		if err != nil {
 			res.Error(c, errcode.ErrAccessDenied)
 			c.Abort()

@@ -1,10 +1,10 @@
 package service
 
 import (
+	"gvb/app"
 	"gvb/config"
 	"gvb/core"
 	"gvb/dao"
-	"gvb/global"
 	"gvb/service/inter"
 )
 
@@ -57,7 +57,7 @@ func NewAiSvcByConfig(config config.Ai) inter.AiService {
 	case "qianfan":
 		return NewAiQianfan(config.Qianfan)
 	default:
-		global.Log.Error("AI service create failed")
+		app.Log.Error("AI service create failed")
 		return nil
 	}
 }

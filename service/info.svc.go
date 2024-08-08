@@ -1,7 +1,7 @@
 package service
 
 import (
-	"gvb/global"
+	"gvb/app"
 	"gvb/models/entity"
 	"gvb/models/res"
 	"gvb/site"
@@ -48,7 +48,7 @@ func (s *SiteInfoService) GetSiteInfo(ctx *gin.Context) (*res.SiteInfo, error) {
 	if err := s.db.Model(&entity.Tag{}).Count(&siteInfo.TagCount).Error; err != nil {
 		return nil, err
 	}
-	global.Log.Info("访问IP:", ctx.ClientIP())
+	app.Log.Info("访问IP:", ctx.ClientIP())
 	exists, err := s.cache.Exists(ctx, viewkey+ctx.ClientIP()).Result()
 	if err != nil {
 		return nil, err

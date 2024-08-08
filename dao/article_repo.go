@@ -3,7 +3,7 @@ package dao
 import (
 	"encoding/json"
 	"fmt"
-	"gvb/global"
+	"gvb/app"
 	"gvb/models/entity"
 	"gvb/models/req"
 	"gvb/models/res"
@@ -163,7 +163,7 @@ func (a *ArticleRepo) AddToSearch(article *entity.Article) {
 	}
 	_, err := a.search.Index(articleSearchIndex).AddDocuments(articleSearch)
 	if err != nil {
-		global.Log.Warn(fmt.Sprintf("Article:%d insert to meilisearch err:%v", articleSearch.Uuid, err))
+		app.Log.Warn(fmt.Sprintf("Article:%d insert to meilisearch err:%v", articleSearch.Uuid, err))
 	}
 }
 

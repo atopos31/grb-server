@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 
+	"gvb/app"
 	"gvb/config"
 	"gvb/core"
-	"gvb/global"
 	"gvb/routers"
 	"gvb/service"
 )
@@ -17,15 +17,17 @@ func main() {
 
 	conf := core.NewConf(*configDir)
 
-	global.Conf = &conf
-	global.Log = core.NewLogger(conf.Logger)
+	app.Conf = &conf
+	app.Log = core.NewLogger(conf.Logger)
 
 	service.Svc = service.New(conf)
 
 	server := routers.New(conf.Sys)
 
 	if conf.Sys.Env == config.ENV_SYS_DEBUG {
-		global.Log.Infof("[Config]:%v", conf)
+		app.Log.Infof("[Config]:%v", conf)
+		app.PrintLogo()
 	}
+
 	server.Run(conf.Sys.Addr())
 }

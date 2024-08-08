@@ -2,7 +2,7 @@ package jwt
 
 import (
 	"errors"
-	"gvb/global"
+	"gvb/app"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -63,13 +63,13 @@ func Parse(tokenString string, secret string) (*Payload, error) {
 func Sign(playload Payload) (string, error) {
 	now := time.Now().Unix()
 	claims := make(jwt.MapClaims)
-	claims["iss"] = global.Conf.Jwt.Issuer
+	claims["iss"] = app.Conf.Jwt.Issuer
 	claims["iat"] = now
-	claims["exp"] = now + global.Conf.Jwt.Timeout*60*60
+	claims["exp"] = now + app.Conf.Jwt.Timeout*60*60
 	claims["nbf"] = now
 	claims["username"] = playload.Username
 	claims["password"] = playload.Password
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(global.Conf.Jwt.Secret))
+	return token.SignedString([]byte(app.Conf.Jwt.Secret))
 }

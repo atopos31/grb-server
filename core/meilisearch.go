@@ -12,5 +12,10 @@ func NewMeiliSearchClient(conf config.Meilisearch) *meilisearch.Client {
 		APIKey: conf.ApiKey,
 	})
 
+	_, err := client.Health()
+	if err != nil {
+		panic(err)
+	}
+
 	return client
 }
