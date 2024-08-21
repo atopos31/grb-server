@@ -10,6 +10,7 @@ func RegisRouter(r *gin.RouterGroup) {
 	cateApi := r.Group("/category")
 	{
 		cateApi.GET("/list", getList)
+		// 管理
 		cateManageApi := cateApi.Group("/manage")
 		cateManageApi.Use(middleware.Auth())
 		{

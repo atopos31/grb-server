@@ -2,13 +2,13 @@ package core
 
 import (
 	"gvb/site"
-	"io/ioutil"
+	"os"
 
 	"gopkg.in/yaml.v2"
 )
 
 func InitSiteInfo(siteInfoPath string) site.SieInfo {
-	file, err := ioutil.ReadFile(siteInfoPath)
+	file, err := os.ReadFile(siteInfoPath)
 	if err != nil {
 		panic(err)
 	}

@@ -11,3 +11,6 @@ init: fmt
 
 fmt:
 	@go fmt ./...
+
+testAI:
+	@go test -v service/test/ai_test.go

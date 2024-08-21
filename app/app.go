@@ -1,8 +1,15 @@
 package app
 
 import (
+	"context"
 	"gvb/config"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
 
@@ -13,7 +20,32 @@ var (
 	Log *logrus.Logger
 )
 
-func PrintLogo() {
+func Run(engine *gin.Engine) {
+	srv := &http.Server{
+		Addr:    Conf.Sys.Addr(),
+		Handler: engine,
+	}
+	go func() {
+		printLogo()
+		Log.Info("GRB listening and serving HTTP on", srv.Addr)
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			Log.Fatalf("listen: %s\n", err)
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+	Log.Info("Shutting down GRB server...")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		Log.Fatal("GRB server forced to shutdown:", err)
+	}
+	Log.Info("GRB server exiting")
+}
+
+func printLogo() {
 	println(`
 	
    _____   _____    ____              _____                                     

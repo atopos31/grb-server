@@ -12,6 +12,7 @@ func RegisRouter(r *gin.RouterGroup) {
 		tagApi.GET("/list", getList)
 		// 获取热门标签
 		tagApi.GET("/hotlist/:size", getHotList)
+		// 管理
 		tagManageApi := tagApi.Group("/manage")
 		tagManageApi.Use(middleware.Auth())
 		{
