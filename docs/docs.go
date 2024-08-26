@@ -1119,9 +1119,6 @@ const docTemplate = `{
                 "categorycount": {
                     "type": "integer"
                 },
-                "record": {
-                    "type": "string"
-                },
                 "tagcount": {
                     "type": "integer"
                 },

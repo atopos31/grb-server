@@ -67,7 +67,6 @@ func (s *SiteInfoService) GetSiteInfo(ctx *gin.Context) (*res.SiteInfo, error) {
 			return nil, err
 		}
 	}
-	siteInfo.Record = s.siteInfo.Site.Record
 	return siteInfo, nil
 }
 

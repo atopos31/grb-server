@@ -27,7 +27,7 @@ func Run(engine *gin.Engine) {
 	}
 	go func() {
 		printLogo()
-		Log.Info("GRB listening and serving HTTP on", srv.Addr)
+		Log.Info("\nGRB listening and serving HTTP on: ", srv.Addr)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			Log.Fatalf("listen: %s\n", err)
 		}
@@ -56,6 +56,5 @@ func printLogo() {
   \_____| |_|  \_\ |____/           |_____/   \___| |_|      \_/    \___| |_|   
                                                                                 
                                                                                 
-
 	`)
 }
