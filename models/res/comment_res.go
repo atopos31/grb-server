@@ -26,3 +26,14 @@ type ChildComment struct {
 	CreatedAt LocalTime      `json:"createdAt"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"` //用来避免查询到软删除的数据
 }
+
+type CommentManager struct {
+	ID        int            `json:"id"`
+	CreatedAt LocalTime      `json:"createdAt"`
+	Content   string         `json:"content"`
+	Email     string         `json:"email"`
+	UserName  string         `json:"userName"`
+	Avatar    string         `json:"avatar"`
+	WebSite   string         `json:"web_site"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"` //用来避免查询到软删除的数据
+}

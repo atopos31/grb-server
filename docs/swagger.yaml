@@ -554,6 +554,35 @@ paths:
       summary: 获取评论列表
       tags:
       - 评论
+  /comment/mansge/list/:status:
+    get:
+      consumes:
+      - application/json
+      description: 根据状态获取评论列表
+      parameters:
+      - description: 评论
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/req.Comment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/res.Comment'
+                  type: array
+              type: object
+      summary: 根据状态获取评论列表
+      tags:
+      - 评论
   /info/badges:
     get:
       produces:

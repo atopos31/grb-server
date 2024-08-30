@@ -39,6 +39,14 @@ func (c *CommentService) Create(reqComment *req.Comment) error {
 	return c.CommentRepo.Create(comment)
 }
 
-func (c *CommentService) GetList(uuid uint32) ([]*res.Comment, error) {
-	return c.CommentRepo.GetList(uuid)
+func (c *CommentService) GetArticleCommentListByUuid(uuid uint32, status uint8) ([]*res.Comment, error) {
+	return c.CommentRepo.GetArticleCommentListByUuid(uuid, 0)
+}
+
+func (c *CommentService) GetCommentList(status uint8) ([]*res.CommentManager, error) {
+	return c.CommentRepo.GetCommentList(status)
+}
+
+func (c *CommentService) UpdateStatus(id uint, status uint8) error {
+	return c.CommentRepo.UpdateStatus(id, status)
 }
