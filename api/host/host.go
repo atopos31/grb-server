@@ -2,6 +2,7 @@ package host
 
 import (
 	"fmt"
+	"gvb/app"
 	"gvb/models/res"
 	"io"
 	"sync"
@@ -43,6 +44,9 @@ func sseHost(c *gin.Context) step {
 		go loadNetIO(&wg, &host.Net, 2*time.Second)
 		wg.Wait()
 		c.SSEvent("message", host)
+		if app.Exit {
+			return false
+		}
 		return true
 	}
 }

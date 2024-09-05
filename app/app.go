@@ -18,6 +18,8 @@ var (
 	Conf *config.Config
 	// Log 日志
 	Log *logrus.Logger
+	// 程序退出
+	Exit bool
 )
 
 func Run(engine *gin.Engine) {
@@ -36,6 +38,7 @@ func Run(engine *gin.Engine) {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
+	Exit = true
 	Log.Info("Shutting down GRB server...")
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
