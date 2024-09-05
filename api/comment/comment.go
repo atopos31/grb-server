@@ -96,13 +96,13 @@ func update(c *gin.Context) {
 	}
 	var err error
 	id, err := conver.StrToUInt(strid)
-	status,err := conver.StrToUint8(strstatus)
+	status, err := conver.StrToUint8(strstatus)
 	if err != nil {
 		res.Error(c, errcode.ErrInvalidParam)
 		return
 	}
 
-	if err := service.Svc.CommentService.UpdateStatus(id,status); err != nil {
+	if err := service.Svc.CommentService.UpdateStatus(id, status); err != nil {
 		res.Error(c, errcode.ErrInternalServer)
 		return
 	}

@@ -22,10 +22,18 @@ func (c *CommentRepo) Create(comment *entity.Comment) error {
 func (c *CommentRepo) GetCommentList(status uint8) ([]*res.CommentManager, error) {
 	var Comments []*res.CommentManager
 	if err := c.db.Model(&entity.Comment{}).
+		Preload("Article", func(db *gorm.DB) *gorm.DB { return db.Select("title", "uuid") }).
 		Where("status = ?", status).
-		Order("created_at desc").Find(&Comments).Error; err != nil {
+		Order("created_at desc").
+		Find(&Comments).Error; err != nil {
+
 		return nil, err
 	}
+
+	for _, comment := range Comments {
+		comment.ArticleTitle = comment.Article.Title
+	}
+
 	return Comments, nil
 }
 

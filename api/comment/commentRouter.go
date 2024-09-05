@@ -16,7 +16,7 @@ func RegisRouter(r *gin.RouterGroup) {
 		commentManageApi.Use(middleware.Auth())
 		{
 			commentManageApi.GET("/list/:status", getList)
-			commentManageApi.PUT("/status/:id", update)
+			commentManageApi.PUT("/:id/:status", update)
 		}
 	}
 }

@@ -1,6 +1,10 @@
 package res
 
-import "gorm.io/gorm"
+import (
+	"gvb/models/entity"
+
+	"gorm.io/gorm"
+)
 
 type Comment struct {
 	ID           int            `json:"id"`
@@ -28,12 +32,15 @@ type ChildComment struct {
 }
 
 type CommentManager struct {
-	ID        int            `json:"id"`
-	CreatedAt LocalTime      `json:"createdAt"`
-	Content   string         `json:"content"`
-	Email     string         `json:"email"`
-	UserName  string         `json:"userName"`
-	Avatar    string         `json:"avatar"`
-	WebSite   string         `json:"web_site"`
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"` //用来避免查询到软删除的数据
+	ID           int            `json:"id"`
+	CreatedAt    LocalTime      `json:"createdAt"`
+	Content      string         `json:"content"`
+	Email        string         `json:"email"`
+	UserName     string         `json:"userName"`
+	Avatar       string         `json:"avatar"`
+	WebSite      string         `json:"web_site"`
+	ArticleUuid  uint32         `gorm:"not null;index;comment:所属文章ID" json:"article_uuid"`
+	ArticleTitle string         `gorm:"-" json:"article_title"`
+	Article      entity.Article `gorm:"foreignKey:ArticleUuid;references:Uuid;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"-"`
+	DeletedAt    gorm.DeletedAt `gorm:"index" json:"-"` //用来避免查询到软删除的数据
 }

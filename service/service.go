@@ -21,6 +21,9 @@ type Service struct {
 	AiService       inter.AiService  // AI接口
 }
 
+const hunyuanAI = "hunyuan"
+const qianfanAI = "qianfan"
+
 func New(config config.Config) *Service {
 	db := core.NewGormDB(config.Mysql)
 	search := core.NewMeiliSearchClient(config.Meilisearch)
@@ -52,12 +55,12 @@ func New(config config.Config) *Service {
 
 func NewAiSvcByConfig(config config.Ai) inter.AiService {
 	switch config.Use {
-	case "hunyuan":
+	case hunyuanAI:
 		return NewAiHunyuan(config.Hunyuan)
-	case "qianfan":
+	case qianfanAI:
 		return NewAiQianfan(config.Qianfan)
 	default:
-		app.Log.Error("AI service create failed")
+		app.Log.Error("AI service create failed",config)
 		return nil
 	}
 }

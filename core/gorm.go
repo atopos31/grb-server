@@ -38,7 +38,6 @@ func NewGormDB(config config.Mysql) *gorm.DB {
 
 	// 初始化表
 	entity.InitEntity(db)
-
 	return db
 }
 
