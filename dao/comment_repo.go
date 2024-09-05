@@ -37,10 +37,10 @@ func (c *CommentRepo) GetCommentList(status uint8) ([]*res.CommentManager, error
 	return Comments, nil
 }
 
-func (c *CommentRepo) GetArticleCommentListByUuid(uuid uint32, status uint8) ([]*res.Comment, error) {
+func (c *CommentRepo) GetArticleCommentListByUuid(uuid uint32) ([]*res.Comment, error) {
 	var rootComments []*res.Comment
 	if err := c.db.Model(&entity.Comment{}).
-		Where("status = ?", status).
+		Where("status = ?", 1).
 		Where("article_uuid = ?", uuid).
 		Where("root_id is null").
 		Order("created_at desc").Find(&rootComments).Error; err != nil {

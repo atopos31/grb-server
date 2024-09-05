@@ -60,7 +60,7 @@ func NewAiSvcByConfig(config config.Ai) inter.AiService {
 	case qianfanAI:
 		return NewAiQianfan(config.Qianfan)
 	default:
-		app.Log.Error("AI service create failed",config)
-		return nil
+		app.Log.Error("AI service create failed", config)
+		return NewAiDefault(config)
 	}
 }

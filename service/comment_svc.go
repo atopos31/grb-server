@@ -25,11 +25,12 @@ const gravatarURl = "https://gravatar.com/avatar/"
 
 func (c *CommentService) Create(reqComment *req.Comment) error {
 	emailMD5 := conver.StringToMD5(reqComment.Email)
+	avatarURL := fmt.Sprintf("%s%s", cravatarURl, emailMD5)
 
 	comment := &entity.Comment{
 		ArticleUuid: reqComment.ArticleID,
 		UserName:    reqComment.UserName,
-		Avatar:      fmt.Sprintf("%s%s", cravatarURl, emailMD5),
+		Avatar:      avatarURL,
 		Email:       reqComment.Email,
 		WebSite:     reqComment.WebSite,
 		Content:     reqComment.Content,
@@ -39,8 +40,8 @@ func (c *CommentService) Create(reqComment *req.Comment) error {
 	return c.CommentRepo.Create(comment)
 }
 
-func (c *CommentService) GetArticleCommentListByUuid(uuid uint32, status uint8) ([]*res.Comment, error) {
-	return c.CommentRepo.GetArticleCommentListByUuid(uuid, 0)
+func (c *CommentService) GetArticleCommentListByUuid(uuid uint32) ([]*res.Comment, error) {
+	return c.CommentRepo.GetArticleCommentListByUuid(uuid)
 }
 
 func (c *CommentService) GetCommentList(status uint8) ([]*res.CommentManager, error) {

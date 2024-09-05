@@ -52,7 +52,7 @@ func getArticleCommentsList(c *gin.Context) {
 		return
 	}
 
-	list, err := service.Svc.CommentService.GetArticleCommentListByUuid(uuid, 0)
+	list, err := service.Svc.CommentService.GetArticleCommentListByUuid(uuid)
 	if err != nil {
 		res.Error(c, errcode.ErrInternalServer)
 		return

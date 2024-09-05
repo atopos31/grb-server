@@ -39,6 +39,7 @@ type CommentManager struct {
 	UserName     string         `json:"userName"`
 	Avatar       string         `json:"avatar"`
 	WebSite      string         `json:"web_site"`
+	RootID       *uint          `gorm:"index;default:NULL;comment:根评论ID，为NULL说明是一级评论"`
 	ArticleUuid  uint32         `gorm:"not null;index;comment:所属文章ID" json:"article_uuid"`
 	ArticleTitle string         `gorm:"-" json:"article_title"`
 	Article      entity.Article `gorm:"foreignKey:ArticleUuid;references:Uuid;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"-"`
