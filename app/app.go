@@ -39,7 +39,7 @@ func Run(engine *gin.Engine) {
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 	Exit = true
-	Log.Info("Shutting down GRB server...")
+	Log.Info("\nShutting down GRB server...")
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
