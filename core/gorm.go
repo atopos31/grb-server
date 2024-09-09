@@ -19,14 +19,9 @@ func NewGormDB(config config.Mysql) *gorm.DB {
 	}
 
 	dsn := config.Dsn()
+	logger := newGormLogger(config.LogLevel)
 
-	logger := logger.Default
-	loggerMode := configLevelToMode(config.LogLevel)
-	logger.LogMode(loggerMode)
-
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
-		Logger: logger,
-	})
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: logger})
 	if err != nil {
 		panic(err)
 	}
@@ -41,15 +36,22 @@ func NewGormDB(config config.Mysql) *gorm.DB {
 	return db
 }
 
-func configLevelToMode(logLevel string) logger.LogLevel {
+func newGormLogger(logLevel string) logger.Interface {
+	var level logger.LogLevel
+
 	switch logLevel {
 	case config.ENV_GORM_ERROR:
-		return logger.Error
+		level = logger.Error
 	case config.ENV_GORM_WORN:
-		return logger.Warn
+		level = logger.Warn
 	case config.ENV_GORM_INFO:
-		return logger.Info
+		level = logger.Info
 	default:
-		return logger.Info
+		level = logger.Info
 	}
+
+	logger := logger.Default
+	logger.LogMode(level)
+
+	return logger
 }

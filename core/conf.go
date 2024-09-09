@@ -13,7 +13,6 @@ func NewConf(configPath string) config.Config {
 	var config config.Config
 
 	if err := confViper.ReadInConfig(); err != nil {
-		println("viper.ReadInConfig failed,please enter " + configPath + "exit!")
 		panic(err)
 	}
 
