@@ -1,4 +1,4 @@
-package host
+package system
 
 import (
 	"gvb/middleware"
@@ -7,9 +7,10 @@ import (
 )
 
 func RegisRouter(c *gin.RouterGroup) {
-	hostApi := c.Group("/host")
+	hostApi := c.Group("/system")
 	hostApi.Use(middleware.Auth())
 	{
-		hostApi.GET("/get", GetHostInfo)
+		hostApi.GET("/info", getInfo)
+		hostApi.GET("/cmn", getCmn)
 	}
 }

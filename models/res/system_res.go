@@ -1,6 +1,14 @@
 package res
 
-type Host struct {
+type Info struct {
+	OS              string `json:"os"`
+	Platform        string `json:"platform"`
+	PlatformVersion string `json:"platform_version"`
+	KernelVersion   string `json:"kernel_version"`
+	Arch            string `json:"arch"`
+}
+
+type Cmn struct {
 	CpuPrecent int `json:"cpuPrecent"`
 	Mem        Mem `json:"mem"`
 	Net        Net `json:"net"`

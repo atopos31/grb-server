@@ -4,9 +4,9 @@ import (
 	"gvb/api/article"
 	"gvb/api/category"
 	"gvb/api/comment"
-	"gvb/api/host"
 	"gvb/api/info"
 	"gvb/api/oss"
+	"gvb/api/system"
 	"gvb/api/tag"
 	"gvb/api/user"
 	"gvb/config"
@@ -37,7 +37,7 @@ func New(config config.System) *gin.Engine {
 	tag.RegisRouter(routerGroup)
 	oss.RegisRouter(routerGroup)
 	info.RegisRouter(routerGroup)
-	host.RegisRouter(routerGroup)
+	system.RegisRouter(routerGroup)
 
 	return router
 }

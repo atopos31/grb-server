@@ -1,4 +1,4 @@
-package host
+package system
 
 import (
 	"fmt"
@@ -10,15 +10,32 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/shirou/gopsutil/v4/cpu"
+	"github.com/shirou/gopsutil/v4/host"
 	"github.com/shirou/gopsutil/v4/mem"
 	"github.com/shirou/gopsutil/v4/net"
 )
+
+func getInfo(c *gin.Context) {
+	hostInfo, err := host.Info()
+	if err != nil {
+		res.Error(c, err)
+		return
+	}
+	info := &res.Info{
+		Arch:            hostInfo.KernelArch,
+		KernelVersion:   hostInfo.KernelVersion,
+		OS:              hostInfo.Platform,
+		Platform:        hostInfo.PlatformFamily,
+		PlatformVersion: hostInfo.PlatformVersion,
+	}
+	res.Success(c, info)
+}
 
 type step func(w io.Writer) bool
 
 // @Tags 系统信息
 // TODO
-func GetHostInfo(c *gin.Context) {
+func getCmn(c *gin.Context) {
 	step := sseHost(c)
 	isClose := c.Stream(step)
 	if isClose {
@@ -31,7 +48,7 @@ func GetHostInfo(c *gin.Context) {
 func sseHost(c *gin.Context) step {
 	return func(w io.Writer) bool {
 		memStatus, _ := mem.VirtualMemory()
-		host := res.Host{
+		host := res.Cmn{
 			Mem: res.Mem{
 				Total:       memStatus.Total,
 				Used:        memStatus.Used,
