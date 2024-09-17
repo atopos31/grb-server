@@ -8,7 +8,7 @@
 | Redis                                      | 7.0.15  |
 | [Meilisearch](https://www.meilisearch.com) | 1.9.0   |
 ## 远程依赖
-| Environment | Name           | description          |
+| Environment | Name           | Description          |
 | ----------- | -------------- | -------------------- |
 | Oss         | 七牛云          | 用于博客内图片存储，文件保存    |
 | Ai          | 腾讯混元/百度千帆  | 用于自动生成文章摘要，均为免费lite模型   |
