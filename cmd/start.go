@@ -11,7 +11,7 @@ import (
 
 func main() {
 	// 从命令行读取配置文件位置
-	configPath := flag.String("config", "./config/dev.yaml", "config dir")
+	configPath := flag.String("config", "../config/dev.yaml", "config dir")
 	flag.Parse()
 	conf := core.NewConf(*configPath)
 	app.Conf = &conf

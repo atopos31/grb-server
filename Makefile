@@ -1,13 +1,13 @@
 dev: init
-	@go run ./main.go -config ./config/dev.yaml
+	@go run ./cmd/start.go -config ./config/dev.yaml
 
 pro: init
-	@go build ./main.go
-	@./main -config ./config/pro.yaml
+	@go build ./cmd/start.go
+	@./cmd/start -config ./config/pro.yaml
 
 init: fmt
 	@go mod tidy
-	@swag init
+	@swag init -g ./cmd/start.go
 
 fmt:
 	@go fmt ./...
