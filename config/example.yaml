@@ -1,0 +1,55 @@
+system:
+  host: 0.0.0.0
+  port: 8999
+  env: debug # ginMode debug, release, test
+  origin: https://xxx.com #  allow origin
+  site_info_path: ./site/info.yaml
+
+jwt:
+  timeout: 168 # token过期时间 单位:小时
+  issuer: xxx # 签发者
+  secret: GrbApp
+
+logger:
+  level: trace # trace, debug, info, warn, error, fatal , panic
+  prefix: gvb
+  director: logs # log dir
+  show_line: true
+  log_in_console: true
+
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  user: root
+  password: 
+  database: gvb
+  log_level: warn # info, warn, error
+
+redis:
+  host: 127.0.0.1
+  password: 
+  port: 6379
+  db: 2
+
+oss:
+  qiniu: # 七牛云OSS 详见 https://developer.qiniu.com/kodo/1644/security 
+    access_key: 
+    secret_key: 
+    domain: https://xxx.com # OSS域名
+    bucket: vblog980
+    region: z1 # 存储区域 华北 详见 https://developer.qiniu.com/kodo/1671/region-endpoint-fq
+    key_prefix: vblog/ # 存储前缀
+    img_process: ?imageView2/0/format/webp # 图片处理 webp提高响应速度 详见 https://developer.qiniu.com/dora/1279/basic-processing-images-imageview2
+    expire: 3600 # 签名过期时间
+
+ai:
+  use:  # 选择AI hunyuan/qianfan
+  hunyuan:
+    secret_id: 
+    secret_key: 
+    model: hunyuan-lite # 模型名称 hunyuan-lite为免费使用 详见 https://cloud.tencent.com/document/product/1729/104753
+  qianfan:
+    access_key: 
+    secret_key: 
+    model: ERNIE-Speed-128K # 模型名称 ERNIE-Speed-128K为免费使用 详见 https://cloud.baidu.com/doc/WENXINWORKSHOP/s/6ltgkzya5

@@ -21,7 +21,7 @@ swag init
 ```
 ## 配置文件
 自行新建开发环境配置文件/config/dev.yaml.
-参考/config/pro.yaml编写配置文件,默认配置为开发环境.
+参考/config/example.yaml编写配置文件,默认配置为开发环境.
 ## 数据库
 新建mysql数据库``databasename``.
 ```sql
