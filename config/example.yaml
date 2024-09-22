@@ -26,6 +26,11 @@ mysql:
   database: gvb
   log_level: warn # info, warn, error
 
+meilisearch: # 搜索引擎
+  host: 127.0.0.1
+  port: 7700
+  api_key: 
+
 redis:
   host: 127.0.0.1
   password: 
