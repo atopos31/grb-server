@@ -3,4 +3,5 @@ config/dev.yaml
 config/pro.yaml
 test/
 **/test/
+logs
 

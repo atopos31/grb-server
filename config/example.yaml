@@ -13,9 +13,10 @@ jwt:
 logger:
   level: trace # trace, debug, info, warn, error, fatal , panic
   prefix: gvb
-  director: logs # log dir
+  director: ./logs # log dir
   show_line: true
-  log_in_console: true
+  log_to_console: true
+  log_to_file: false
 
 mysql:
   host: 127.0.0.1
