@@ -20,14 +20,15 @@ type ArticleRepo struct {
 	db     *gorm.DB
 	cache  *redis.Client
 	search *meilisearch.Client
+	index  string
 }
 
 var model = &entity.Article{}
 
 const articleSearchIndex = "articles"
 
-func NewArticleRepo(db *gorm.DB, cache *redis.Client, search *meilisearch.Client) *ArticleRepo {
-	return &ArticleRepo{db: db, cache: cache, search: search}
+func NewArticleRepo(db *gorm.DB, cache *redis.Client, search *meilisearch.Client,index string) *ArticleRepo {
+	return &ArticleRepo{db: db, cache: cache, search: search,index: index}
 }
 
 func (a *ArticleRepo) GetListClumns() []string {

@@ -6,6 +6,7 @@ type Meilisearch struct {
 	Host   string `mapstructure:"host"`
 	Port   string `mapstructure:"port"`
 	ApiKey string `mapstructure:"api_key"`
+	Index  string `mapstructure:"index"`
 }
 
 func (m *Meilisearch) Dsn() string {
