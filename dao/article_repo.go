@@ -25,8 +25,6 @@ type ArticleRepo struct {
 
 var model = &entity.Article{}
 
-const articleSearchIndex = "articles"
-
 func NewArticleRepo(db *gorm.DB, cache *redis.Client, search *meilisearch.Client,index string) *ArticleRepo {
 	return &ArticleRepo{db: db, cache: cache, search: search,index: index}
 }
@@ -162,7 +160,7 @@ func (a *ArticleRepo) AddToSearch(article *entity.Article) {
 		Summary: article.Summary,
 		Content: article.Content,
 	}
-	_, err := a.search.Index(articleSearchIndex).AddDocuments(articleSearch)
+	_, err := a.search.Index(a.index).AddDocuments(articleSearch)
 	if err != nil {
 		app.Log.Warn(fmt.Sprintf("Article:%d insert to meilisearch err:%v", articleSearch.Uuid, err))
 	}
@@ -170,7 +168,7 @@ func (a *ArticleRepo) AddToSearch(article *entity.Article) {
 
 // 删除文章在搜索引擎中的记录
 func (a *ArticleRepo) DeleteSearch(uuid string) error {
-	_, err := a.search.Index(articleSearchIndex).DeleteDocument(uuid)
+	_, err := a.search.Index(a.index).DeleteDocument(uuid)
 	if err != nil {
 		return err
 	}
@@ -184,7 +182,7 @@ func (a *ArticleRepo) UpdateSummarySearch(uuid uint32, summary string) (err erro
 		"summary": summary,
 	}
 
-	_, err = a.search.Index(articleSearchIndex).UpdateDocuments(article)
+	_, err = a.search.Index(a.index).UpdateDocuments(article)
 	if err != nil {
 		return err
 	}
@@ -194,7 +192,7 @@ func (a *ArticleRepo) UpdateSummarySearch(uuid uint32, summary string) (err erro
 
 // 搜索文章 搜索引擎实现
 func (a *ArticleRepo) GetSearchList(query string) (*search.ArticleSearchResult, error) {
-	res, err := a.search.Index(articleSearchIndex).Search(query, &meilisearch.SearchRequest{
+	res, err := a.search.Index(a.index).Search(query, &meilisearch.SearchRequest{
 		AttributesToCrop:      []string{"title", "content", "summary"},
 		CropLength:            30,
 		AttributesToHighlight: []string{"title", "content", "summary"},
