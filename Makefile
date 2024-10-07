@@ -2,8 +2,7 @@ dev: init
 	@go run ./cmd/start.go -config ./config/dev.yaml
 
 pro: init
-	@go build ./cmd/start.go
-	@./cmd/start -config ./config/pro.yaml
+	@go build -o ./bin/grb ./cmd/start.go 
 
 init: fmt
 	@go mod tidy

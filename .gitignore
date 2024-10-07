@@ -4,4 +4,4 @@ config/pro.yaml
 test/
 **/test/
 logs
-
+bin

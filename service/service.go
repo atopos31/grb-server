@@ -30,7 +30,7 @@ func New(config config.Config) *Service {
 	cache := core.NewRedisCache(config.Redis)
 
 	userRepo := dao.NewUserRepo(db)
-	articleRepo := dao.NewArticleRepo(db, cache, search,config.Meilisearch.Index)
+	articleRepo := dao.NewArticleRepo(db, cache, search, config.Meilisearch.Index)
 	tagRepo := dao.NewTagRepo(db)
 	cateRepo := dao.NewCateRepo(db)
 	commentRepo := dao.NewCommentRepo(db)

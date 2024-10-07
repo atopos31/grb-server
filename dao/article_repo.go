@@ -25,8 +25,8 @@ type ArticleRepo struct {
 
 var model = &entity.Article{}
 
-func NewArticleRepo(db *gorm.DB, cache *redis.Client, search *meilisearch.Client,index string) *ArticleRepo {
-	return &ArticleRepo{db: db, cache: cache, search: search,index: index}
+func NewArticleRepo(db *gorm.DB, cache *redis.Client, search *meilisearch.Client, index string) *ArticleRepo {
+	return &ArticleRepo{db: db, cache: cache, search: search, index: index}
 }
 
 func (a *ArticleRepo) GetListClumns() []string {
