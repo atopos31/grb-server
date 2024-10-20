@@ -68,10 +68,7 @@ func (a *ArticleRepo) GetListOption(isManage bool, pageSize, pageNum int, titleL
 		return nil, 0, err
 	}
 
-	if err := query.Offset((pageNum - 1) * pageSize).
-		Limit(pageSize).
-		Order("created_at desc").
-		Find(&articles).Error; err != nil {
+	if err := query.Scopes(Paginate(pageNum, pageSize), OrderCreatedAtDesc).Find(&articles).Error; err != nil {
 		return nil, 0, err
 	}
 	return articles, count, nil

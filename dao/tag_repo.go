@@ -53,7 +53,7 @@ func (t *TagRepo) Create(tag entity.Tag) (uint, error) {
 
 func (t *TagRepo) GetList() ([]res.Tag, error) {
 	var tags []res.Tag
-	if err := t.db.Select("id", "name").Order("created_at asc").Find(&tags).Error; err != nil {
+	if err := t.db.Select("id", "name").Scopes(OrderCreatedAtDesc).Find(&tags).Error; err != nil {
 		return nil, err
 	}
 
@@ -64,8 +64,8 @@ func (t *TagRepo) GetManageList(pageSize, pageNum int) ([]res.ManageTag, error) 
 	var tags []entity.Tag
 	err := t.db.Select("id", "name", "created_at").
 		Preload("Articles").
-		Offset((pageNum - 1) * pageSize).Limit(pageSize).
-		Order("created_at desc").Find(&tags).Error
+		Scopes(Paginate(pageNum, pageSize), OrderCreatedAtDesc).
+		Find(&tags).Error
 	if err != nil {
 		return nil, err
 	}

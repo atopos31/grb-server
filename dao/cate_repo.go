@@ -30,7 +30,7 @@ func (c *CateRepo) Create(cate entity.Category) (uint, error) {
 
 func (c *CateRepo) GetList() ([]res.Category, error) {
 	var cates []res.Category
-	err := c.db.Select("id", "name").Order("created_at asc").Find(&cates).Error
+	err := c.db.Select("id", "name").Scopes(OrderCreatedAtDesc).Find(&cates).Error
 	return cates, err
 }
 
@@ -38,7 +38,7 @@ func (c *CateRepo) GetManageList(pageSize, pageNum int) ([]res.ManageCategory, e
 	var cates []entity.Category
 	err := c.db.Select("id", "name", "created_at").
 		Preload("Articles").
-		Offset((pageNum - 1) * pageSize).Limit(pageSize).
+		Scopes(Paginate(pageNum, pageSize), OrderCreatedAtDesc).
 		Order("created_at desc").Find(&cates).Error
 	if err != nil {
 		return nil, err

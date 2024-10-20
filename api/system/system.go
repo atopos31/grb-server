@@ -1,7 +1,6 @@
 package system
 
 import (
-	"fmt"
 	"gvb/app"
 	"gvb/models/res"
 	"io"
@@ -39,9 +38,9 @@ func getCmn(c *gin.Context) {
 	step := sseHost(c)
 	isClose := c.Stream(step)
 	if isClose {
-		fmt.Printf("Client IP:%sClose connent\n", c.RemoteIP())
+		app.Log.Warningf("Client IP:%s Close connent\n", c.RemoteIP())
 	} else {
-		fmt.Println("Server close connnent")
+		app.Log.Warningf("Server Close connent\n")
 	}
 }
 
