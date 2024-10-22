@@ -3,6 +3,7 @@ dev: init
 
 pro: init
 	@go build -o ./bin/grb ./cmd/start.go 
+	@nohup ./bin/grb -config ./config/pro.yaml > /dev/null 2>&1 &
 
 init: fmt
 	@go mod tidy
