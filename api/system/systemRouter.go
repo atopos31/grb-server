@@ -11,6 +11,6 @@ func RegisRouter(c *gin.RouterGroup) {
 	hostApi.Use(middleware.Auth())
 	{
 		hostApi.GET("/info", getInfo)
-		hostApi.GET("/cmn", getCmn)
+		hostApi.GET("/cmn", handlerServerStatus) // 获取服务器状态 CPU Memory Network
 	}
 }

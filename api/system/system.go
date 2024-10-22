@@ -32,10 +32,11 @@ func getInfo(c *gin.Context) {
 
 type step func(w io.Writer) bool
 
+// @Summary 服务器状态监控SSE接口
 // @Tags 系统信息
 // TODO
-func getCmn(c *gin.Context) {
-	step := sseHost(c)
+func handlerServerStatus(c *gin.Context) {
+	step := statusWriter(c)
 	isClose := c.Stream(step)
 	if isClose {
 		app.Log.Warningf("Client IP:%s Close connent\n", c.RemoteIP())
@@ -44,7 +45,7 @@ func getCmn(c *gin.Context) {
 	}
 }
 
-func sseHost(c *gin.Context) step {
+func statusWriter(c *gin.Context) step {
 	return func(w io.Writer) bool {
 		memStatus, _ := mem.VirtualMemory()
 		host := res.Cmn{
