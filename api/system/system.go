@@ -61,6 +61,8 @@ func statusWriter(c *gin.Context) step {
 		go loadNetIO(&wg, &host.Net, 2*time.Second)
 		wg.Wait()
 		c.SSEvent("message", host)
+
+		// 服务端优雅推出
 		if app.Exit {
 			return false
 		}
