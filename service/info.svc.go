@@ -48,7 +48,7 @@ func (s *SiteInfoService) GetSiteInfo(ctx *gin.Context) (*res.SiteInfo, error) {
 	if err := s.db.Model(&entity.Tag{}).Count(&siteInfo.TagCount).Error; err != nil {
 		return nil, err
 	}
-	app.Log.Info("访问IP:", ctx.ClientIP())
+	app.Log.Infof("访问IP: %s", ctx.ClientIP())
 	exists, err := s.cache.Exists(ctx, viewkey+ctx.ClientIP()).Result()
 	if err != nil {
 		return nil, err

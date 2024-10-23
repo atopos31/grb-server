@@ -16,5 +16,5 @@ func NewAiDefault(conf config.Ai) *AiDefault {
 }
 
 func (a *AiDefault) GetSummary(articleContent string) (string, error) {
-	return fmt.Sprintf("AI服务未配置,或参数错误%+v", a.conf), nil
+	return fmt.Sprintf("AI服务未配置, 或参数错误%+v", a.conf), nil
 }

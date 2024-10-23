@@ -159,7 +159,7 @@ func (a *ArticleRepo) AddToSearch(article *entity.Article) {
 	}
 	_, err := a.search.Index(a.index).AddDocuments(articleSearch)
 	if err != nil {
-		app.Log.Warn(fmt.Sprintf("Article:%d insert to meilisearch err:%v", articleSearch.Uuid, err))
+		app.Log.Warnf("Article:%d insert to meilisearch err:%v", articleSearch.Uuid, err)
 	}
 }
 
