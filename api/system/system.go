@@ -39,7 +39,7 @@ func handlerServerStatus(c *gin.Context) {
 	step := statusWriter(c)
 	isClose := c.Stream(step)
 	if isClose {
-		app.Log.Warningf("Client IP:%s Close connent\n", c.RemoteIP())
+		app.Log.Warningf("Client IP:%s Close connent\n", c.ClientIP())
 	} else {
 		app.Log.Warningf("Server Close connent\n")
 	}
