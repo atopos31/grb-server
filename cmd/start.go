@@ -16,7 +16,11 @@ func main() {
 	conf := core.NewConf(*configPath)
 	app.Conf = &conf
 	app.Log = core.NewLogger(conf.Logger)
-	service.Svc = service.New(conf)
+	svc, err := service.New(conf)
+	if err != nil {
+		panic(err)
+	}
+	service.Svc = svc
 	server := routers.New(conf.Sys)
 
 	app.Run(server)

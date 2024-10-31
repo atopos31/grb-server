@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gvb/config"
 	"gvb/models/res"
+	"gvb/service/inter"
 
 	"github.com/qiniu/go-sdk/v7/auth"
 	"github.com/qiniu/go-sdk/v7/storage"
@@ -20,7 +21,7 @@ type OssQinui struct {
 	imgProcess string // 图片处理
 }
 
-func NewOssQinui(config config.OssQiniu) *OssQinui {
+func NewOssQinui(config config.OssQiniu) inter.OssService {
 	if config.AccessKey == "" || config.SecretKey == "" || config.Bucket == "" || config.Domain == "" || config.Region == "" {
 		panic("oss Qiniu config error")
 	}

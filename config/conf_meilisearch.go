@@ -9,6 +9,10 @@ type Meilisearch struct {
 	Index  string `mapstructure:"index"`
 }
 
+func NewMeilisearchConfig(config Config) Meilisearch {
+	return config.Meilisearch
+}
+
 func (m *Meilisearch) Dsn() string {
 	return fmt.Sprintf("http://%s:%s", m.Host, m.Port)
 }

@@ -10,3 +10,7 @@ type OssQiniu struct {
 	KeyPrefix  string `mapstructure:"key_prefix"`  // 存储路径前缀
 	ImgProcess string `mapstructure:"img_process"` // 图片处理
 }
+
+func NewOssQiniuConfig(config Config) OssQiniu {
+	return config.Oss.OssQiniu
+}

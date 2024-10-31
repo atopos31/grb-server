@@ -3,12 +3,24 @@ package service
 import (
 	"gvb/app"
 	"gvb/config"
-	"gvb/core"
-	"gvb/dao"
 	"gvb/service/inter"
+
+	"github.com/google/wire"
 )
 
 var Svc *Service
+
+var ProvideSet = wire.NewSet(
+	NewService,
+	NewOssQinui,
+	NewUserService,
+	NewArticleService,
+	NewCateService,
+	NewTagService,
+	NewCommentService,
+	NewSiteInfoService,
+	NewAiSvcByConfig,
+)
 
 type Service struct {
 	UserService     *UserService
@@ -24,30 +36,14 @@ type Service struct {
 const hunyuanAI = "hunyuan"
 const qianfanAI = "qianfan"
 
-func New(config config.Config) *Service {
-	db := core.NewGormDB(config.Mysql)
-	search := core.NewMeiliSearchClient(config.Meilisearch)
-	cache := core.NewRedisCache(config.Redis)
-
-	userRepo := dao.NewUserRepo(db)
-	articleRepo := dao.NewArticleRepo(db, cache, search, config.Meilisearch.Index)
-	tagRepo := dao.NewTagRepo(db)
-	cateRepo := dao.NewCateRepo(db)
-	commentRepo := dao.NewCommentRepo(db)
-
-	//预留接口 实现可拓展 可选择不同Oss服务注入
-	ossSvc := NewOssQinui(config.Oss.OssQiniu)
-	aiSvc := NewAiSvcByConfig(config.Ai)
-
-	siteInfoPath := config.Sys.SiteInfoPath
-
+func NewService(config config.Config, userSvc *UserService, articleSvc *ArticleService, cateSvc *CateService, tagSvc *TagService, commentSvc *CommentService, siteSvc *SiteInfoService, ossSvc inter.OssService, aiSvc inter.AiService) *Service {
 	return &Service{
-		UserService:     NewUserService(userRepo),
-		ArticleService:  NewArticleService(articleRepo, tagRepo),
-		CateService:     NewCateService(cateRepo),
-		TagService:      NewTagService(tagRepo),
-		CommentService:  NewCommentService(commentRepo),
-		SiteInfoService: NewSiteInfoService(db, cache, siteInfoPath),
+		UserService:     userSvc,
+		ArticleService:  articleSvc,
+		CateService:     cateSvc,
+		TagService:      tagSvc,
+		CommentService:  commentSvc,
+		SiteInfoService: siteSvc,
 		OssService:      ossSvc,
 		AiService:       aiSvc,
 	}

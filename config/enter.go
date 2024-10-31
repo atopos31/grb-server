@@ -1,5 +1,7 @@
 package config
 
+import "github.com/google/wire"
+
 type Config struct {
 	Sys         System      `mapstructure:"system"`
 	Jwt         Jwt         `mapstructure:"jwt"`
@@ -10,3 +12,12 @@ type Config struct {
 	Oss         Oss         `mapstructure:"oss"`
 	Ai          Ai          `mapstructure:"ai"`
 }
+
+var ProvideSet = wire.NewSet(
+	NewMeilisearchConfig,
+	NewAiConfig,
+	NewRedisConfig,
+	NewMysqlConfig,
+	NewOssQiniuConfig,
+	NewSiteInfoPath,
+)

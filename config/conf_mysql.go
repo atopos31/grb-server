@@ -20,6 +20,10 @@ type Mysql struct {
 	LogLevel string `mapstructure:"log_level"`
 }
 
+func NewMysqlConfig(config Config) Mysql {
+	return config.Mysql
+}
+
 // Dsn mysql dsn
 func (m *Mysql) Dsn() string {
 	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?%s", m.User, m.Password, m.Host, m.Port, m.Database, m.Config)

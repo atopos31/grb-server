@@ -9,6 +9,10 @@ type Redis struct {
 	DB       int    `mapstructure:"db"`
 }
 
+func NewRedisConfig(config Config) Redis {
+	return config.Redis
+}
+
 func (r *Redis) Addr() string {
 	return fmt.Sprintf("%s:%s", r.Host, r.Port)
 }
