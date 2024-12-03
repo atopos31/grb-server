@@ -59,3 +59,7 @@ ai:
     access_key: 
     secret_key: 
     model: ERNIE-Speed-128K # 模型名称 ERNIE-Speed-128K为免费使用 详见 https://cloud.baidu.com/doc/WENXINWORKSHOP/s/6ltgkzya5
+  grmini:
+    api_key:
+    socks5:
+    model:
