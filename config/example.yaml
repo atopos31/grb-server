@@ -63,3 +63,7 @@ ai:
     api_key:
     socks5:
     model:
+  openai:
+    api_key:
+    model:
+    base_url:
